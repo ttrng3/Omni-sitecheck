@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>OMNI SITECHECK Dashboard</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #f7f8fa;
+    color: #1f2937;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 24px; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+  h1 { margin: 0 0 4px 0; font-size: 22px; letter-spacing: -0.01em; }
+  .subtitle { color: #6b7280; font-size: 13px; }
+  .badge { display: inline-block; padding: 3px 9px; background: #eef2ff; color: #4338ca; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .kpi { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; }
+  .kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; font-weight: 600; }
+  .kpi .value { font-size: 26px; font-weight: 700; margin-top: 4px; color: #111827; }
+  .kpi .delta { font-size: 12px; margin-top: 2px; }
+  .delta.up { color: #b45309; }
+  .delta.down { color: #047857; }
+  .delta.flat { color: #6b7280; }
+  .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; }
+  .card h3 { margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #111827; }
+  .chart-wrap { position: relative; height: 240px; }
+  .chart-wrap.tall { height: 280px; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 12px 14px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; margin-bottom: 14px; }
+  .filters label { font-size: 12px; color: #6b7280; margin-right: 4px; }
+  .filters select, .filters input { padding: 6px 9px; font-size: 13px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; }
+  .filters .stat { margin-left: auto; font-size: 12px; color: #6b7280; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: #f3f4f6; text-align: left; padding: 9px 10px; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; cursor: pointer; user-select: none; }
+  thead th:hover { background: #e5e7eb; }
+  tbody td { padding: 9px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  tbody tr:hover { background: #fafafa; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .pill.done { background: #d1fae5; color: #065f46; }
+  .pill.progress { background: #fef3c7; color: #92400e; }
+  .pill.scheduled { background: #dbeafe; color: #1e40af; }
+  .pill.site-LA { background: #ede9fe; color: #5b21b6; }
+  .pill.site-VN { background: #fce7f3; color: #9d174d; }
+  .pill.dept { background: #f3f4f6; color: #374151; }
+  .footer-note { margin-top: 18px; padding: 12px 14px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; color: #78350f; font-size: 12px; }
+  .footer-note a { color: #92400e; }
+  details { font-size: 12px; color: #4b5563; margin-top: 6px; }
+  summary { cursor: pointer; }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <span class="badge">Weekly Sitecheck · Khối Vận Hành</span>
+      <h1>OMNI SITECHECK — Operations Task Status</h1>
+      <div class="subtitle">Source: OneDrive · OMNI - SITECHECK · As of Week 2 / May 2026 (updated 19 May 2026)</div>
+    </div>
+    <div class="subtitle">
+      Sites: <strong>BQLVH Long An</strong> · <strong>BQLVH Vinh</strong>
+    </div>
+  </header>
+
+  <!-- KPIs -->
+  <section class="kpis">
+    <div class="kpi">
+      <div class="label">Tasks this week (W2 May)</div>
+      <div class="value">61</div>
+      <div class="delta up">▲ +40 vs W1 May (21)</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Outstanding (chưa hoàn thành)</div>
+      <div class="value">8</div>
+      <div class="delta flat">Long An 5 · Vinh 3</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Completion rate (latest)</div>
+      <div class="value">86.9%</div>
+      <div class="delta down">53/61 closed in week</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Long An (BQLVH LA)</div>
+      <div class="value">20</div>
+      <div class="delta up">▲ +9 WoW · 5 outstanding</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Vinh (BQLVH VN)</div>
+      <div class="value">41</div>
+      <div class="delta up">▲ +31 WoW · 3 outstanding</div>
+    </div>
+  </section>
+
+  <!-- Charts row 1 -->
+  <section class="grid">
+    <div class="card">
+      <h3>Tasks per week — Long An vs Vinh</h3>
+      <div class="chart-wrap tall"><canvas id="trendChart"></canvas></div>
+      <details><summary>Series notes</summary>
+        Dec W2 from <em>251212_Omni_Báo cáo sitecheck Tuần 2 tháng 12.xlsx</em>. April W4, May W1, May W2 from weekly .xlsb summary sheets indexed by SharePoint.
+      </details>
+    </div>
+    <div class="card">
+      <h3>Outstanding (chưa hoàn thành) — latest week</h3>
+      <div class="chart-wrap tall"><canvas id="outstandingChart"></canvas></div>
+      <details><summary>How it's counted</summary>
+        Outstanding = items not marked "Đã hoàn thành" at the end of the reporting week. Long An splits prior-week carryover (3) and current-week unfinished (2); Vinh reports a combined 3.
+      </details>
+    </div>
+  </section>
+
+  <!-- Charts row 2 -->
+  <section class="grid-3">
+    <div class="card">
+      <h3>Status breakdown (detail sample)</h3>
+      <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>By handling department (Bộ phận xử lý)</h3>
+      <div class="chart-wrap"><canvas id="deptChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>By area (Vị trí / khu vực)</h3>
+      <div class="chart-wrap"><canvas id="areaChart"></canvas></div>
+    </div>
+  </section>
+
+  <!-- Filters + Table -->
+  <section>
+    <div class="filters">
+      <label for="filtSite">Site</label>
+      <select id="filtSite">
+        <option value="">All</option>
+        <option value="Long An">Long An</option>
+        <option value="Vinh">Vinh</option>
+      </select>
+      <label for="filtStatus">Status</label>
+      <select id="filtStatus">
+        <option value="">All</option>
+        <option value="Đã hoàn thành">Đã hoàn thành (Done)</option>
+        <option value="Đang xử lý">Đang xử lý (In progress)</option>
+        <option value="Thời hạn">Thời hạn / Scheduled</option>
+      </select>
+      <label for="filtDept">Department</label>
+      <select id="filtDept">
+        <option value="">All</option>
+      </select>
+      <label for="filtSearch">Search</label>
+      <input id="filtSearch" type="text" placeholder="Mô tả, vị trí..." style="min-width: 200px;" />
+      <span class="stat" id="tableStat"></span>
+    </div>
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div style="max-height: 520px; overflow: auto;">
+        <table id="taskTable">
+          <thead>
+            <tr>
+              <th data-sort="site">Site</th>
+              <th data-sort="area">Area / Vị trí</th>
+              <th data-sort="issue">Issue / Mô tả</th>
+              <th data-sort="dept">Dept / Bộ phận xử lý</th>
+              <th data-sort="action">Action / Phương án</th>
+              <th data-sort="status">Status</th>
+            </tr>
+          </thead>
+          <tbody id="taskTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <strong>Data caveat.</strong> The newer weekly files (.xlsb) are blocked by the SharePoint connector's MIME allowlist, so the <em>trend numbers</em> were pulled from indexed text excerpts of those files (summary sheet). The <em>row-level task table</em> below uses the December Week 2 detail (.xlsx), which is the most recent file in the folder that the connector returns as fully-readable text. The structure of weekly files is consistent — same columns, same two BQLVH sites — so the dashboard layout works once the .xlsb format is unblocked or re-exported as .xlsx. To get the latest row-level detail for W2 May, either re-save the .xlsb as .xlsx or grant browser access so I can read it through SharePoint's Excel Online viewer.
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script>
+// ---------- DATA ----------
+
+// Weekly trend (verified from SharePoint search excerpts)
+const trend = {
+  labels: ['Dec W2 ’25', 'Apr W4 ’26', 'May W1 ’26', 'May W2 ’26'],
+  longAn: [17, 7, 11, 20],
+  vinh:   [12, 9, 10, 41]
+};
+
+// Outstanding at latest week (W2 May 2026)
+const outstandingLatest = { longAn: 5, vinh: 3 };
+
+// Row-level detail — from Dec W2 ’25 (.xlsx; latest fully-readable file).
+// Each row: site, area, issue, dept, action, status
+const tasks = [
+  // ---- BQLVH LONG AN (17 rows from Dec W2 detail sheet) ----
+  { site: 'Long An', area: 'Kho', issue: 'Công tác quản lý tài sản — đảm bảo thiết bị, vật tư, giấy tờ, mã tài sản', dept: 'MTĐT', action: 'Rà soát định kỳ', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Khu vực chung, nhà vệ sinh', issue: 'Không gian chung gọn gàng, sạch sẽ, không có rác nổi, không mùi bất thường', dept: 'MTĐT', action: 'Vệ sinh duy trì', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Khu vực ngoài nhà', issue: 'Hạng mục công trình hoàn thiện ngoài nhà được vệ sinh định kỳ', dept: 'MTĐT', action: 'Vệ sinh định kỳ', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Khu vực chung', issue: 'Công tác vệ sinh, thu gom rác — thùng rác không quá đầy', dept: 'MTĐT', action: 'Thu gom định kỳ', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Khu vực trong nhà', issue: 'Hạng mục, đồ dùng trong nhà sạch sẽ; kính, sàn nhà sạch bóng', dept: 'MTĐT', action: 'Vệ sinh duy trì', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Khu vực ngoài nhà', issue: 'Nền nhà mẫu bên ngoài bị dơ', dept: 'MTĐT', action: 'Thường xuyên vệ sinh khu vực có nhiều người di chuyển', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Khu vực ngoài nhà', issue: 'Kiểm soát xử lý côn trùng & mối định kỳ, đảm bảo an toàn', dept: 'MTĐT', action: 'Xử lý côn trùng định kỳ', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Nhà Đa Năng', issue: 'Vệ sinh khu chức năng, phụ trợ theo định kỳ và duy trì hằng ngày', dept: 'MTĐT', action: 'Vệ sinh định kỳ', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'CCDC', issue: 'Công cụ dụng cụ cho CBNV đầy đủ, đảm bảo tiêu chuẩn vệ sinh', dept: 'MTĐT', action: 'Cấp phát, kiểm tra định kỳ', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Phòng camera', issue: 'Dụng cụ sạc, dụng cụ cá nhân để trên vị trí tủ điện', dept: 'AN', action: 'Dời các dụng cụ sạc, dụng cụ cá nhân khỏi tủ điện, tủ báo cháy để tránh cản trở khi có sự cố', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'BOT trực an ninh', issue: 'BOT An ninh đầy đủ dụng cụ trực, vệ sinh tốt, tác phong đồng phục', dept: 'AN', action: 'Duy trì tiêu chuẩn', status: 'Đang xử lý' },
+  { site: 'Long An', area: 'Đường dạo hồ thiên nga', issue: 'Đá bị vỡ', dept: 'KT', action: 'Thay/sửa đá lát', status: 'Đang xử lý' },
+  { site: 'Long An', area: 'Công viên ánh sáng', issue: 'Đá bị vỡ', dept: 'KT', action: 'Thay/sửa đá lát', status: 'Đang xử lý' },
+  { site: 'Long An', area: 'Nhà Đa Năng', issue: 'Hư hệ thống bản lề, chưa khóa được — nguy cơ mất ATTS', dept: 'KT', action: 'Chỉnh sửa bản lề', status: 'Đang xử lý' },
+  { site: 'Long An', area: 'Nhà Đa Năng', issue: 'Ván ốp trần bị hở, mất mỹ quan', dept: 'KT', action: 'Sửa ván ốp', status: 'Đang xử lý' },
+  { site: 'Long An', area: 'Nhà Đa Năng', issue: 'Kính vách vỡ, mất mỹ quan', dept: 'KT', action: 'Đã báo nhà thầu thay kính, dự kiến hoàn thành 20/12/2025', status: 'Đã hoàn thành' },
+  { site: 'Long An', area: 'Hồ rừng', issue: 'Hồ dơ, lá cây', dept: 'CSKH', action: 'Vệ sinh hồ', status: 'Đã hoàn thành' },
+
+  // ---- BQLVH VINH (12 rows from Dec W2 detail sheet) ----
+  { site: 'Vinh', area: 'Nhà mẫu đơn lập', issue: 'Ghế trang trí ngoài trời xuất hiện tình trạng rỉ sét', dept: 'Kỹ thuật', action: 'Đánh bóng lại', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Block', issue: 'Sàn khu trang trí cổng hoa bị bẩn', dept: 'Môi trường đô thị', action: 'Vệ sinh lại', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'CT01', issue: 'Nền của hầm CT01 bị bẩn', dept: 'Môi trường đô thị', action: 'Vệ sinh lại', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Công viên', issue: 'Vật dụng vui chơi cho trẻ em tại Công viên bị hư hỏng', dept: 'Kỹ thuật Vận hành', action: 'Sửa chữa', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Block', issue: 'Ghế xích đu tại Block bị gió quật hỏng', dept: 'Kỹ thuật Vận hành', action: 'Thu gom về bảo trì', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Block', issue: 'Bệt tiểu nhà vệ sinh nam Block 3 bị không thoát được nước', dept: 'Kỹ thuật Vận hành', action: 'Sửa chữa', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Block', issue: 'Lá cây khu block bị bám bụi', dept: 'Môi trường đô thị', action: 'Vệ sinh lại', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Block', issue: 'Bảng biển tại block 3 bị hư hỏng', dept: 'Kỹ thuật Vận hành', action: 'Sửa chữa', status: 'Thời hạn hoàn thành 20/12/2025' },
+  { site: 'Vinh', area: 'Nhà mẫu đơn lập', issue: 'Không setup hoa trên bàn', dept: 'Chăm sóc cư dân & Quản lý tiện ích', action: 'Setup lại', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Block', issue: 'Thảm setup bị quăn', dept: 'Môi trường đô thị', action: 'Setup lại', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Block', issue: 'Không đặt biển hiệu khu vực thi công và quây Barie khu vực thi công', dept: 'An ninh', action: 'Đặt bổ sung', status: 'Đã hoàn thành' },
+  { site: 'Vinh', area: 'Nhà mẫu thô', issue: 'Lan can bị rỉ sét', dept: 'Kỹ thuật Vận hành', action: 'Bảo trì', status: 'Thời hạn hoàn thành 20/12/2025' }
+];
+
+// Normalise dept abbreviations into broader buckets for the chart
+const deptBucket = (d) => {
+  const x = d.toLowerCase();
+  if (x.includes('mtđt') || x.includes('môi trường')) return 'Môi trường đô thị';
+  if (x.includes('kỹ thuật') || x === 'kt') return 'Kỹ thuật / Vận hành';
+  if (x.includes('an ninh') || x === 'an') return 'An ninh';
+  if (x.includes('cskh') || x.includes('chăm sóc')) return 'CSKH / Tiện ích';
+  return d;
+};
+
+// Status bucket
+const statusBucket = (s) => {
+  if (s.startsWith('Đã hoàn thành') || s === 'Hoàn thành') return 'Đã hoàn thành';
+  if (s.startsWith('Đang xử lý')) return 'Đang xử lý';
+  if (s.startsWith('Thời hạn')) return 'Theo lịch (scheduled)';
+  return s;
+};
+
+// ---------- CHARTS ----------
+const colorLA = '#6366f1';
+const colorVN = '#ec4899';
+const colorDone = '#10b981';
+const colorProgress = '#f59e0b';
+const colorScheduled = '#3b82f6';
+
+// Trend
+new Chart(document.getElementById('trendChart'), {
+  type: 'bar',
+  data: {
+    labels: trend.labels,
+    datasets: [
+      { label: 'Long An', data: trend.longAn, backgroundColor: colorLA, borderRadius: 4 },
+      { label: 'Vinh',    data: trend.vinh,   backgroundColor: colorVN, borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+    plugins: { legend: { position: 'bottom' } }
+  }
+});
+
+// Outstanding
+new Chart(document.getElementById('outstandingChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Long An — outstanding', 'Vinh — outstanding', 'Closed this week'],
+    datasets: [{
+      data: [outstandingLatest.longAn, outstandingLatest.vinh, 61 - (outstandingLatest.longAn + outstandingLatest.vinh)],
+      backgroundColor: [colorLA, colorVN, colorDone]
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' } }
+  }
+});
+
+// Status chart (from detail rows)
+const statusCounts = tasks.reduce((acc, t) => {
+  const k = statusBucket(t.status);
+  acc[k] = (acc[k] || 0) + 1;
+  return acc;
+}, {});
+new Chart(document.getElementById('statusChart'), {
+  type: 'pie',
+  data: {
+    labels: Object.keys(statusCounts),
+    datasets: [{
+      data: Object.values(statusCounts),
+      backgroundColor: [colorDone, colorProgress, colorScheduled]
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+});
+
+// Dept chart
+const deptCounts = tasks.reduce((acc, t) => {
+  const k = deptBucket(t.dept);
+  acc[k] = (acc[k] || 0) + 1;
+  return acc;
+}, {});
+new Chart(document.getElementById('deptChart'), {
+  type: 'bar',
+  data: {
+    labels: Object.keys(deptCounts),
+    datasets: [{ label: 'Tasks', data: Object.values(deptCounts), backgroundColor: '#8b5cf6', borderRadius: 4 }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    scales: { x: { beginAtZero: true, ticks: { precision: 0 } } },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// Area chart (top 8)
+const areaCountsAll = tasks.reduce((acc, t) => {
+  acc[t.area] = (acc[t.area] || 0) + 1;
+  return acc;
+}, {});
+const areaSorted = Object.entries(areaCountsAll).sort((a,b) => b[1]-a[1]).slice(0, 8);
+new Chart(document.getElementById('areaChart'), {
+  type: 'bar',
+  data: {
+    labels: areaSorted.map(([k]) => k),
+    datasets: [{ label: 'Tasks', data: areaSorted.map(([,v]) => v), backgroundColor: '#0ea5e9', borderRadius: 4 }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    scales: { x: { beginAtZero: true, ticks: { precision: 0 } } },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// ---------- TABLE + FILTERS ----------
+const tbody = document.getElementById('taskTbody');
+const filtSite = document.getElementById('filtSite');
+const filtStatus = document.getElementById('filtStatus');
+const filtDept = document.getElementById('filtDept');
+const filtSearch = document.getElementById('filtSearch');
+const tableStat = document.getElementById('tableStat');
+
+// Populate dept dropdown
+const allDepts = [...new Set(tasks.map(t => deptBucket(t.dept)))].sort();
+allDepts.forEach(d => {
+  const opt = document.createElement('option'); opt.value = d; opt.textContent = d; filtDept.appendChild(opt);
+});
+
+let sortKey = null, sortDir = 1;
+
+function statusPill(s) {
+  const bucket = statusBucket(s);
+  const cls = bucket === 'Đã hoàn thành' ? 'done' : (bucket === 'Đang xử lý' ? 'progress' : 'scheduled');
+  return `<span class="pill ${cls}">${s}</span>`;
+}
+function sitePill(s) {
+  return `<span class="pill site-${s === 'Long An' ? 'LA' : 'VN'}">${s}</span>`;
+}
+function deptPill(d) {
+  return `<span class="pill dept">${d}</span>`;
+}
+
+function render() {
+  const site = filtSite.value;
+  const status = filtStatus.value;
+  const dept = filtDept.value;
+  const q = filtSearch.value.trim().toLowerCase();
+
+  let rows = tasks.filter(t => {
+    if (site && t.site !== site) return false;
+    if (status && !t.status.startsWith(status)) return false;
+    if (dept && deptBucket(t.dept) !== dept) return false;
+    if (q) {
+      const hay = (t.area + ' ' + t.issue + ' ' + t.action + ' ' + t.dept).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  if (sortKey) {
+    rows = rows.slice().sort((a, b) => {
+      const av = (a[sortKey] || '').toString();
+      const bv = (b[sortKey] || '').toString();
+      return av.localeCompare(bv) * sortDir;
+    });
+  }
+
+  tbody.innerHTML = rows.map(t => `
+    <tr>
+      <td>${sitePill(t.site)}</td>
+      <td>${t.area}</td>
+      <td>${t.issue}</td>
+      <td>${deptPill(t.dept)}</td>
+      <td>${t.action}</td>
+      <td>${statusPill(t.status)}</td>
+    </tr>
+  `).join('');
+
+  tableStat.textContent = `${rows.length} of ${tasks.length} tasks`;
+}
+
+document.querySelectorAll('th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.sort;
+    if (sortKey === k) sortDir = -sortDir;
+    else { sortKey = k; sortDir = 1; }
+    render();
+  });
+});
+
+[filtSite, filtStatus, filtDept].forEach(el => el.addEventListener('change', render));
+filtSearch.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>
