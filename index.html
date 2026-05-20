@@ -61,6 +61,11 @@
   .ref-badge { display: inline-block; margin-left: 6px; padding: 1px 7px; background: #fef3c7; color: #92400e; border-radius: 999px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
   .ref-banner { background: #fffbeb; border: 1px solid #fde68a; border-left: 3px solid #f59e0b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #78350f; margin: 14px 0; }
   .ref-banner strong { color: #78350f; }
+  .empty-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; color: #9ca3af; font-size: 12px; font-style: italic; padding: 0 16px; }
+  tbody tr.clickable { cursor: pointer; }
+  tbody tr.clickable:hover { background: #eff6ff; }
+  tbody tr.selected { background: #dbeafe !important; }
+  tbody tr.selected td:first-child { box-shadow: inset 3px 0 0 #2563eb; }
   .pill.site-LA { background: #ede9fe; color: #5b21b6; }
   .pill.site-VN { background: #fce7f3; color: #9d174d; }
   .pill.dept { background: #f3f4f6; color: #374151; }
@@ -162,24 +167,24 @@
     </div>
   </section>
 
-  <!-- Reference banner explaining the Dec W2 limitation -->
+  <!-- Reference banner — drives interaction model -->
   <div class="ref-banner">
-    <strong>Detail snapshot below = Dec W2 2025 only.</strong> The three charts and the row-level table use the only weekly file the SharePoint connector returns as fully-readable text (the Dec W2 .xlsx). Every weekly since Jan 2026 is .xlsb and only the summary header is indexed. <strong>The filters below DO update these three charts</strong> — pick a site, status, or department and watch them re-render. Once the team starts saving each weekly as .xlsx (or the connector's MIME allowlist expands), this section will refresh weekly along with the rest of the dashboard.
+    <strong>Click any row in the weekly table above</strong> to drill the three charts and the row-level table below into that week. Only <strong>Dec W2 2025</strong> currently has row-level detail in the source (.xlsx); every other week is .xlsb (summary-only). When you pick a week without detail, the charts go empty and tell you so. Once the team saves more weeklies as .xlsx, those weeks will start populating automatically.
   </div>
 
-  <!-- Charts row 2 (from Dec W2 detail — now filter-reactive) -->
+  <!-- Charts row 2 — driven by selected week from the table above -->
   <section class="grid-3" style="margin-top: 14px;">
     <div class="card">
-      <h3>Status breakdown <span class="ref-badge">Dec W2 ref</span></h3>
-      <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+      <h3>Status breakdown <span class="ref-badge" id="badgeStatus">Dec W2 '25</span></h3>
+      <div class="chart-wrap"><canvas id="statusChart"></canvas><div class="empty-msg" id="emptyStatus" style="display:none;">No row-level data for this week</div></div>
     </div>
     <div class="card">
-      <h3>By handling dept <span class="ref-badge">Dec W2 ref</span></h3>
-      <div class="chart-wrap"><canvas id="deptChart"></canvas></div>
+      <h3>By handling dept <span class="ref-badge" id="badgeDept">Dec W2 '25</span></h3>
+      <div class="chart-wrap"><canvas id="deptChart"></canvas><div class="empty-msg" id="emptyDept" style="display:none;">No row-level data for this week</div></div>
     </div>
     <div class="card">
-      <h3>By area <span class="ref-badge">Dec W2 ref</span></h3>
-      <div class="chart-wrap"><canvas id="areaChart"></canvas></div>
+      <h3>By area <span class="ref-badge" id="badgeArea">Dec W2 '25</span></h3>
+      <div class="chart-wrap"><canvas id="areaChart"></canvas><div class="empty-msg" id="emptyArea" style="display:none;">No row-level data for this week</div></div>
     </div>
   </section>
 
@@ -260,8 +265,12 @@ const history = [
   { week: 'May W2 ’26', src: 'Báo cáo Sitecheck tuần 02 tháng 05 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%205/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2002%20th%C3%A1ng%2005%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 20, vnR: 41, laO: 3, vnO: 3, verified: true }
 ];
 
-// ---------- DEC W2 ROW-LEVEL DETAIL (verbatim from 251212_Omni_*.xlsx) ----------
-const tasks = [
+// ---------- ROW-LEVEL DETAIL BY WEEK ----------
+// Only Dec W2 ’25 has row-level data (the only .xlsx in the source folder).
+// Other weeks will populate here when source files become readable.
+const weekTasks = {};
+// Dec W2 ’25 tasks (verbatim from 251212_Omni_*.xlsx)
+weekTasks['Dec W2 ’25'] = [
   // BQLVH LONG AN — 17 rows
   { site: 'Long An', area: 'Kho', issue: 'Công tác quản lý tài sản', dept: 'MTĐT', action: 'Đảm bảo thiết bị, vật tư đảm bảo, đầy đủ giấy tờ, mã tài sản', status: 'Đã hoàn thành' },
   { site: 'Long An', area: 'Khu vực chung, nhà vệ sinh', issue: 'Không gian chung đảm bảo gọn gàng, sạch sẽ, không có rác nổi. - Mùi tự nhiên, không có các mùi nặng bất thường', dept: 'MTĐT', action: '—', status: 'Đã hoàn thành' },
@@ -296,6 +305,12 @@ const tasks = [
   { site: 'Vinh', area: 'Nhà mẫu thô', issue: 'Lan can bị rỉ sét', dept: 'Kỹ thuật Vận hành', action: 'Bảo trì', status: 'Thời hạn hoàn thành 20/12/2025' }
 ];
 
+// Selected week — drives the lower charts and detail table. Defaults to Dec W2 (only week with data).
+let currentWeek = 'Dec W2 ’25';
+function tasksForCurrentWeek() {
+  return weekTasks[currentWeek] || [];
+}
+
 // ---------- HELPERS ----------
 const deptBucket = (d) => {
   const x = d.toLowerCase();
@@ -320,17 +335,19 @@ const areaNormalize = (a) => {
   return x;
 };
 
-// ---------- WEEKLY TABLE ----------
+// ---------- WEEKLY TABLE (clickable to drill into a week) ----------
 const weeklyTbody = document.getElementById('weeklyTbody');
 weeklyTbody.innerHTML = history.map(w => {
   const n = (v) => v === null ? '<span class="muted">(?)</span>' : v;
   const statusTag = w.verified
     ? '<span class="pill done">verified</span>'
     : `<span class="pill verify" title="${w.note || 'Partial data — verify in source'}">verify ↗</span>`;
+  const hasDetail = !!weekTasks[w.week];
+  const sel = w.week === currentWeek ? ' selected' : '';
   return `
-    <tr>
-      <td><strong>${w.week}</strong></td>
-      <td><a class="src" href="${w.srcUrl}" target="_blank" rel="noopener">${w.src}</a></td>
+    <tr class="clickable${sel}" data-week="${w.week}" title="${hasDetail ? 'Click to drill into ' + w.week : 'No row-level data for this week (summary-only .xlsb)'}">
+      <td><strong>${w.week}</strong>${hasDetail ? ' <span class="pill done" style="font-size:9px;padding:1px 6px;">detail</span>' : ''}</td>
+      <td><a class="src" href="${w.srcUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">${w.src}</a></td>
       <td class="n">${n(w.laR)}</td>
       <td class="n">${n(w.vnR)}</td>
       <td class="n">${n(w.laO)}</td>
@@ -423,7 +440,34 @@ const areaChartInst = new Chart(document.getElementById('areaChart'), {
   options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }, plugins: { legend: { display: false } } }
 });
 
+const badgeStatus = document.getElementById('badgeStatus');
+const badgeDept = document.getElementById('badgeDept');
+const badgeArea = document.getElementById('badgeArea');
+const emptyStatus = document.getElementById('emptyStatus');
+const emptyDept = document.getElementById('emptyDept');
+const emptyArea = document.getElementById('emptyArea');
+
+function setEmpty(isEmpty) {
+  const display = isEmpty ? 'flex' : 'none';
+  const canvasDisplay = isEmpty ? 'none' : 'block';
+  [emptyStatus, emptyDept, emptyArea].forEach(el => { if (el) el.style.display = display; });
+  document.getElementById('statusChart').style.display = canvasDisplay;
+  document.getElementById('deptChart').style.display = canvasDisplay;
+  document.getElementById('areaChart').style.display = canvasDisplay;
+}
+
 function updateLowerCharts(filteredTasks) {
+  // Update header badges to reflect the selected week
+  badgeStatus.textContent = currentWeek;
+  badgeDept.textContent = currentWeek;
+  badgeArea.textContent = currentWeek;
+
+  if (!filteredTasks || filteredTasks.length === 0) {
+    setEmpty(true);
+    return;
+  }
+  setEmpty(false);
+
   // Status pie
   const sc = filteredTasks.reduce((acc, t) => { const k = statusBucket(t.status); acc[k] = (acc[k] || 0) + 1; return acc; }, {});
   statusChartInst.data.labels = Object.keys(sc);
@@ -452,10 +496,16 @@ const filtDept = document.getElementById('filtDept');
 const filtSearch = document.getElementById('filtSearch');
 const tableStat = document.getElementById('tableStat');
 
-const allDepts = [...new Set(tasks.map(t => deptBucket(t.dept)))].sort();
-allDepts.forEach(d => {
-  const opt = document.createElement('option'); opt.value = d; opt.textContent = d; filtDept.appendChild(opt);
-});
+function refreshDeptOptions() {
+  const t = tasksForCurrentWeek();
+  const allDepts = [...new Set(t.map(x => deptBucket(x.dept)))].sort();
+  // Reset (keep the "All" option)
+  filtDept.innerHTML = '<option value="">All</option>';
+  allDepts.forEach(d => {
+    const opt = document.createElement('option'); opt.value = d; opt.textContent = d; filtDept.appendChild(opt);
+  });
+}
+refreshDeptOptions();
 
 let sortKey = null, sortDir = 1;
 
@@ -479,7 +529,8 @@ function render() {
   const dept = filtDept.value;
   const q = filtSearch.value.trim().toLowerCase();
 
-  let rows = tasks.filter(t => {
+  const weekData = tasksForCurrentWeek();
+  let rows = weekData.filter(t => {
     if (site && t.site !== site) return false;
     if (status && !t.status.startsWith(status)) return false;
     if (dept && deptBucket(t.dept) !== dept) return false;
@@ -512,7 +563,7 @@ function render() {
     </tr>
   `).join('');
 
-  tableStat.textContent = `${rows.length} of ${tasks.length} tasks`;
+  tableStat.textContent = `${currentWeek}: ${rows.length} of ${weekData.length} tasks` + (weekData.length === 0 ? ' (no row-level data — pick Dec W2 ’25 in the table above)' : '');
 }
 
 document.querySelectorAll('th[data-sort]').forEach(th => {
@@ -526,6 +577,28 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
 
 [filtSite, filtStatus, filtDept].forEach(el => el.addEventListener('change', render));
 filtSearch.addEventListener('input', render);
+
+// Click a weekly row → drill into that week
+weeklyTbody.addEventListener('click', (e) => {
+  const tr = e.target.closest('tr.clickable');
+  if (!tr) return;
+  const week = tr.dataset.week;
+  if (!week || week === currentWeek) return;
+  currentWeek = week;
+  // Refresh selection highlight
+  weeklyTbody.querySelectorAll('tr.clickable').forEach(r => {
+    r.classList.toggle('selected', r.dataset.week === currentWeek);
+  });
+  // Reset filters when switching weeks so the user sees the full week first
+  filtSite.value = '';
+  filtStatus.value = '';
+  filtSearch.value = '';
+  refreshDeptOptions();
+  render();
+  // Scroll the lower section into view so the user sees the drill update
+  document.getElementById('statusChart').scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
 render();
 </script>
 </body>
