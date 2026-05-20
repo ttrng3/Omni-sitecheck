@@ -311,6 +311,14 @@ const statusBucket = (s) => {
   if (s.startsWith('Thời hạn')) return 'Theo lịch (scheduled)';
   return s;
 };
+// Normalise area names (source data has typos + same-place-different-wording).
+// Display-only — the row-level table still shows the verbatim source text.
+const areaNormalize = (a) => {
+  const x = a.trim();
+  if (x === 'Blcok') return 'Block';
+  if (x === 'Khu vực nhà Đa năng' || x === 'Khu vực Nhà Đa năng') return 'Nhà Đa Năng';
+  return x;
+};
 
 // ---------- WEEKLY TABLE ----------
 const weeklyTbody = document.getElementById('weeklyTbody');
@@ -428,8 +436,8 @@ function updateLowerCharts(filteredTasks) {
   deptChartInst.data.datasets[0].data = Object.values(dc);
   deptChartInst.update();
 
-  // Area bar (top 10)
-  const ac = filteredTasks.reduce((acc, t) => { acc[t.area] = (acc[t.area] || 0) + 1; return acc; }, {});
+  // Area bar (top 10) — normalise typos and same-place-different-wording before counting
+  const ac = filteredTasks.reduce((acc, t) => { const k = areaNormalize(t.area); acc[k] = (acc[k] || 0) + 1; return acc; }, {});
   const aSorted = Object.entries(ac).sort((a, b) => b[1] - a[1]).slice(0, 10);
   areaChartInst.data.labels = aSorted.map(([k]) => k);
   areaChartInst.data.datasets[0].data = aSorted.map(([, v]) => v);
