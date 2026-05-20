@@ -3,3 +3,6 @@ thumbnail.png
 sitecheck-history.json
 sitecheck-refresh-*.md
 .github-token
+.github-token.save
+*.save
+versions/
