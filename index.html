@@ -139,7 +139,7 @@
       </h3>
       <div class="chart-wrap" style="height: 360px;"><canvas id="combinedChart"></canvas></div>
       <details><summary>How this is read</summary>
-        Each bar = total tasks raised that week (ERLA + ECP). Each bar is stacked into four segments: <strong>ERLA completed</strong> (indigo) + <strong>ERLA outstanding</strong> (amber) + <strong>ECP completed</strong> (pink) + <strong>ECP outstanding</strong> (red). "Outstanding" = the <em>"SL chưa hoàn thành đến nay"</em> snapshot from that week's own report — point-in-time, not cumulative. Completed = raised − outstanding. Source: weekly .xlsx files in <em>/OMNI - SITECHECK/THÁNG N</em>.
+        For each week, two stacked bars side-by-side: <strong>left = ERLA (Long An)</strong>, <strong>right = ECP (Vinh)</strong>. Each bar's height = tasks that site raised that week. Each bar is segmented: <strong>completed</strong> (emerald for LA, blue for Vinh) at the bottom + <strong>outstanding</strong> (amber for LA, red for Vinh) on top. "Outstanding" = the <em>"SL chưa hoàn thành đến nay"</em> snapshot from that week's own report — point-in-time, not cumulative. Completed = raised − outstanding. Source: weekly .xlsx files in <em>/OMNI - SITECHECK/THÁNG N</em>.
       </details>
     </div>
   </section>
@@ -374,25 +374,30 @@ const colorProgress = '#f59e0b';
 const colorScheduled = '#3b82f6';
 const colorOverdue = '#ef4444';
 
-const colorLAOpen = '#fbbf24';   // amber for LA outstanding
-const colorVNOpen = '#ef4444';   // red for Vinh outstanding
+// Palette — site differentiated by hue family, status by saturation
+// ERLA (Long An): emerald done / amber open
+// ECP (Vinh):     blue done    / red open
+const c_LA_done  = '#10b981';   // emerald-500
+const c_LA_open  = '#f59e0b';   // amber-500
+const c_VN_done  = '#3b82f6';   // blue-500
+const c_VN_open  = '#ef4444';   // red-500
 
 const combinedChartInst = new Chart(document.getElementById('combinedChart'), {
   type: 'bar',
   data: { labels: [], datasets: [
-    { label: 'ERLA completed', data: [], backgroundColor: colorLA, stack: 's', borderWidth: 0 },
-    { label: 'ERLA outstanding', data: [], backgroundColor: colorLAOpen, stack: 's', borderWidth: 0 },
-    { label: 'ECP completed', data: [], backgroundColor: colorVN, stack: 's', borderWidth: 0 },
-    { label: 'ECP outstanding', data: [], backgroundColor: colorVNOpen, stack: 's', borderWidth: 0 }
+    { label: 'ERLA completed',   data: [], backgroundColor: c_LA_done, stack: 'la', borderWidth: 0, categoryPercentage: 0.85, barPercentage: 0.95 },
+    { label: 'ERLA outstanding', data: [], backgroundColor: c_LA_open, stack: 'la', borderWidth: 0, categoryPercentage: 0.85, barPercentage: 0.95 },
+    { label: 'ECP completed',    data: [], backgroundColor: c_VN_done, stack: 'vn', borderWidth: 0, categoryPercentage: 0.85, barPercentage: 0.95 },
+    { label: 'ECP outstanding',  data: [], backgroundColor: c_VN_open, stack: 'vn', borderWidth: 0, categoryPercentage: 0.85, barPercentage: 0.95 }
   ]},
   options: {
     responsive: true, maintainAspectRatio: false,
     scales: {
-      x: { stacked: true, ticks: { autoSkip: false, maxRotation: 60, minRotation: 45 } },
-      y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
+      x: { stacked: true, ticks: { autoSkip: false, maxRotation: 60, minRotation: 45 }, grid: { display: false } },
+      y: { stacked: true, beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f5f9' } }
     },
     plugins: {
-      legend: { position: 'bottom' },
+      legend: { position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 14 } },
       tooltip: {
         callbacks: {
           title: (items) => items[0].label,
@@ -403,7 +408,14 @@ const combinedChartInst = new Chart(document.getElementById('combinedChart'), {
             const open = (w.laO||0) + (w.vnO||0);
             const done = total - open;
             const rate = total ? Math.round(done/total*1000)/10 : 0;
-            const lines = [`Total raised: ${total}`, `Completed: ${done} (${rate}%)`, `Outstanding: ${open}`];
+            const laRate = w.laR ? Math.round((w.laR-(w.laO||0))/w.laR*1000)/10 : 0;
+            const vnRate = w.vnR ? Math.round((w.vnR-(w.vnO||0))/w.vnR*1000)/10 : 0;
+            const lines = [
+              `Total raised: ${total}  (LA ${w.laR} · Vinh ${w.vnR})`,
+              `Completed: ${done} (${rate}%)`,
+              `  LA ${w.laR-(w.laO||0)}/${w.laR} (${laRate}%) · Vinh ${w.vnR-(w.vnO||0)}/${w.vnR} (${vnRate}%)`,
+              `Outstanding: ${open}  (LA ${w.laO||0} · Vinh ${w.vnO||0})`
+            ];
             if (!w.verified) lines.push('(?) partial / unverified');
             return lines;
           }
