@@ -1,605 +1,179 @@
-<!DOCTYPE html><script type="application/json" id="cowork-artifact-meta">
-{
-  "name": "Omni Sitecheck Status",
-  "schemaVersion": 1
-}
-</script>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>OMNI SITECHECK Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMNI Sitecheck Status</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
-  :root { color-scheme: light; }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: #f7f8fa;
-    color: #1f2937;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
-    line-height: 1.45;
-  }
-  .wrap { max-width: 1280px; margin: 0 auto; padding: 24px; }
-  header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
-  h1 { margin: 0 0 4px 0; font-size: 22px; letter-spacing: -0.01em; }
-  .subtitle { color: #6b7280; font-size: 13px; }
-  .badge { display: inline-block; padding: 3px 9px; background: #eef2ff; color: #4338ca; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
-  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px; }
-  .kpi { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; }
-  .kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; font-weight: 600; }
-  .kpi .value { font-size: 26px; font-weight: 700; margin-top: 4px; color: #111827; }
-  .kpi .delta { font-size: 12px; margin-top: 2px; }
-  .delta.up { color: #b45309; }
-  .delta.down { color: #047857; }
-  .delta.flat { color: #6b7280; }
-  .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; }
-  .card h3 { margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #111827; }
-  .chart-wrap { position: relative; height: 240px; }
-  .chart-wrap.tall { height: 280px; }
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 12px 14px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; margin-bottom: 14px; }
-  .filters label { font-size: 12px; color: #6b7280; margin-right: 4px; }
-  .filters select, .filters input { padding: 6px 9px; font-size: 13px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; }
-  .filters .stat { margin-left: auto; font-size: 12px; color: #6b7280; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th { background: #f3f4f6; text-align: left; padding: 9px 10px; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; cursor: pointer; user-select: none; }
-  thead th:hover { background: #e5e7eb; }
-  tbody td { padding: 9px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
-  tbody tr:hover { background: #fafafa; }
-  .num-table thead th { cursor: default; }
-  .num-table thead th:hover { background: #f3f4f6; }
-  .num-table td.n { text-align: right; font-variant-numeric: tabular-nums; }
-  .num-table td.muted { color: #9ca3af; font-style: italic; }
-  .num-table a.src { color: #4338ca; text-decoration: none; font-size: 12px; }
-  .num-table a.src:hover { text-decoration: underline; }
-  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
-  .pill.done { background: #d1fae5; color: #065f46; }
-  .pill.progress { background: #fef3c7; color: #92400e; }
-  .pill.scheduled { background: #dbeafe; color: #1e40af; }
-  .ref-badge { display: inline-block; margin-left: 6px; padding: 1px 7px; background: #fef3c7; color: #92400e; border-radius: 999px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
-  .ref-banner { background: #fffbeb; border: 1px solid #fde68a; border-left: 3px solid #f59e0b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #78350f; margin: 14px 0; }
-  .ref-banner strong { color: #78350f; }
-  .empty-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; color: #9ca3af; font-size: 12px; font-style: italic; padding: 0 16px; }
-  tbody tr.clickable { cursor: pointer; }
-  tbody tr.clickable:hover { background: #eff6ff; }
-  tbody tr.selected { background: #dbeafe !important; }
-  tbody tr.selected td:first-child { box-shadow: inset 3px 0 0 #2563eb; }
-  .pill.site-LA { background: #ede9fe; color: #5b21b6; }
-  .pill.site-VN { background: #fce7f3; color: #9d174d; }
-  .pill.dept { background: #f3f4f6; color: #374151; }
-  .pill.verify { background: #fee2e2; color: #991b1b; }
-  .footer-note { margin-top: 18px; padding: 12px 14px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; color: #78350f; font-size: 12px; }
-  .footer-note a { color: #92400e; }
-  details { font-size: 12px; color: #4b5563; margin-top: 6px; }
-  summary { cursor: pointer; }
-  @media (max-width: 900px) {
-    .grid, .grid-2 { grid-template-columns: 1fr; }
-    .grid-3 { grid-template-columns: 1fr; }
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0b1220;color:#e2e8f0;padding:24px;min-height:100vh}
+.head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;flex-wrap:wrap;gap:14px}
+h1{font-size:22px;color:#f1f5f9;font-weight:700}
+.subtitle{color:#94a3b8;font-size:12px;margin-top:3px}
+.scope{background:#1e293b;padding:6px 12px;border-radius:8px;border:1px solid #334155;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px}
+.scope strong{color:#cbd5e1}
+.snapshot-bar{background:linear-gradient(135deg,#1e293b 0%,#243044 100%);padding:16px 20px;border-radius:12px;margin-bottom:16px;display:flex;gap:24px;flex-wrap:wrap;border-left:4px solid #3b82f6}
+.snapshot-item{display:flex;flex-direction:column}
+.snapshot-label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.6px}
+.snapshot-value{font-size:22px;font-weight:700;color:#f1f5f9;margin-top:2px}
+.snapshot-value.warn{color:#fbbf24}
+.snapshot-value.bad{color:#f87171}
+.snapshot-value.good{color:#34d399}
+.delta{font-size:12px;margin-left:8px;font-weight:500}
+.delta.up{color:#34d399}
+.delta.down{color:#f87171}
+.delta.flat{color:#94a3b8}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:#1e293b;padding:16px 18px;border-radius:12px;border-left:4px solid #3b82f6}
+.kpi.done{border-left-color:#10b981}
+.kpi.warn{border-left-color:#f59e0b}
+.kpi.bad{border-left-color:#ef4444}
+.kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:0.6px;color:#94a3b8}
+.kpi-value{font-size:28px;font-weight:700;color:#f1f5f9;margin-top:4px}
+.kpi-sub{font-size:11px;color:#64748b;margin-top:3px}
+.chart-box{background:#1e293b;padding:16px;border-radius:12px;margin-bottom:14px}
+.chart-box h3{font-size:13px;margin-bottom:10px;color:#cbd5e1;font-weight:600}
+canvas{max-height:340px}
+.table-box{background:#1e293b;border-radius:12px;overflow:hidden;margin-bottom:14px}
+.table-header{padding:12px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #334155}
+.table-header h3{font-size:13px;font-weight:600;color:#cbd5e1}
+.table-header .count{font-size:12px;color:#94a3b8}
+.table-wrap{max-height:520px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#0f172a;padding:9px 12px;text-align:left;font-weight:600;color:#cbd5e1;position:sticky;top:0;border-bottom:1px solid #334155;font-size:10px;text-transform:uppercase;letter-spacing:0.4px}
+td{padding:9px 12px;border-bottom:1px solid #1f2937;color:#cbd5e1;vertical-align:top}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+td.strong{font-weight:700;color:#f1f5f9}
+tr:hover td{background:#233044}
+.note{font-size:10px;color:#94a3b8;font-style:italic}
+.footer{font-size:11px;color:#64748b;text-align:center;margin-top:18px;padding-top:10px;border-top:1px solid #1f2937}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <div>
-      <span class="badge">Weekly Sitecheck · Khối Vận Hành</span>
-      <h1>OMNI SITECHECK — Operations Task Status</h1>
-      <div class="subtitle">Source: OneDrive · OMNI - SITECHECK · Latest data: <strong>Week 2 / May 2026</strong> (file lastModified 19 May 2026) · Verified 20 May 2026</div>
-    </div>
-    <div class="subtitle">
-      Sites: <strong>ERLA (BQLVH Long An)</strong> · <strong>ECP (BQLVH Vinh)</strong>
-    </div>
-  </header>
-
-  <!-- KPIs -->
-  <section class="kpis">
-    <div class="kpi">
-      <div class="label">Tasks (W2 May)</div>
-      <div class="value">61</div>
-      <div class="delta up">▲ +40 vs W1 May (21)</div>
-    </div>
-    <div class="kpi">
-      <div class="label">Outstanding W2 May (per source)</div>
-      <div class="value">6</div>
-      <div class="delta flat">ERLA 3 · ECP 3</div>
-    </div>
-    <div class="kpi">
-      <div class="label">Closure rate W2 May</div>
-      <div class="value">90.2%</div>
-      <div class="delta down">55 closed / 61 total</div>
-    </div>
-    <div class="kpi">
-      <div class="label">ERLA — BQLVH Long An</div>
-      <div class="value">20</div>
-      <div class="delta up">▲ +9 WoW · 3 outstanding</div>
-    </div>
-    <div class="kpi">
-      <div class="label">ECP — BQLVH Vinh</div>
-      <div class="value">41</div>
-      <div class="delta up">▲ +31 WoW · 3 outstanding</div>
-    </div>
-  </section>
-
-  <!-- Charts row 1 -->
-  <section class="grid-2">
-    <div class="card">
-      <h3>Tasks per week — ERLA vs ECP (Dec 2025 → May 2026)</h3>
-      <div class="chart-wrap tall"><canvas id="trendChart"></canvas></div>
-      <details><summary>Data caveats</summary>
-        Source: weekly .xlsb files in <em>/OMNI - SITECHECK/THÁNG N</em>. Files in .xlsb format are blocked by the SharePoint connector — numbers extracted from indexed summary-table text. Rows marked with <strong>(?)</strong> in the table below have partial or no indexed content and need manual verification. Tháng 12 = 2025; Tháng 1-5 = 2026.
-      </details>
-    </div>
-    <div class="card">
-      <h3>Outstanding per week — chưa hoàn thành (snapshot, NOT cumulative)</h3>
-      <div class="chart-wrap tall"><canvas id="outstandingChart"></canvas></div>
-      <details><summary>How this is read</summary>
-        Each bar is the <em>"SL chưa hoàn thành đến nay"</em> snapshot from <strong>that week's own report</strong>. It is NOT a running total. Bars at zero mean the report explicitly recorded zero outstanding. Missing weeks are gaps in the source folder (no .xlsb file present for that week). Bars rendered as 0 with a "(?)" annotation = source row was truncated in the indexed text.
-      </details>
-    </div>
-  </section>
-
-  <!-- Per-week table -->
-  <section>
-    <div class="card" style="padding: 0; overflow: hidden;">
-      <div style="padding: 14px 16px; border-bottom: 1px solid #e5e7eb;">
-        <h3 style="margin: 0;">Weekly summary table — crosscheck against source file</h3>
-        <div class="subtitle" style="margin-top: 4px;">Click "View source" to open the file on SharePoint. Numbers come from the "BẢNG TỔNG HỢP" sheet of each weekly file.</div>
-      </div>
-      <div style="max-height: 480px; overflow: auto;">
-        <table class="num-table">
-          <thead>
-            <tr>
-              <th>Week</th>
-              <th>Source file</th>
-              <th style="text-align: right;">ERLA</th>
-              <th style="text-align: right;">ECP</th>
-              <th style="text-align: right;">ERLA open</th>
-              <th style="text-align: right;">ECP open</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="weeklyTbody"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- Reference banner — drives interaction model -->
-  <div class="ref-banner">
-    <strong>Click any row in the weekly table above</strong> to drill the three charts and the row-level table below into that week. Only <strong>Dec W2 2025</strong> currently has row-level detail in the source (.xlsx); every other week is .xlsb (summary-only). When you pick a week without detail, the charts go empty and tell you so. Once the team saves more weeklies as .xlsx, those weeks will start populating automatically.
+<div class="head">
+  <div>
+    <h1>OMNI Sitecheck — Trạng thái khối vận hành</h1>
+    <div class="subtitle">As of <strong>May W2 2026</strong> · 18 tuần dữ liệu · Cập nhật 21/05/2026</div>
   </div>
-
-  <!-- Charts row 2 — driven by selected week from the table above -->
-  <section class="grid-3" style="margin-top: 14px;">
-    <div class="card">
-      <h3>Status breakdown <span class="ref-badge" id="badgeStatus">Dec W2 '25</span></h3>
-      <div class="chart-wrap"><canvas id="statusChart"></canvas><div class="empty-msg" id="emptyStatus" style="display:none;">No row-level data for this week</div></div>
-    </div>
-    <div class="card">
-      <h3>By handling dept <span class="ref-badge" id="badgeDept">Dec W2 '25</span></h3>
-      <div class="chart-wrap"><canvas id="deptChart"></canvas><div class="empty-msg" id="emptyDept" style="display:none;">No row-level data for this week</div></div>
-    </div>
-    <div class="card">
-      <h3>By area <span class="ref-badge" id="badgeArea">Dec W2 '25</span></h3>
-      <div class="chart-wrap"><canvas id="areaChart"></canvas><div class="empty-msg" id="emptyArea" style="display:none;">No row-level data for this week</div></div>
-    </div>
-  </section>
-
-  <!-- Filters + Detail Table -->
-  <section>
-    <div class="filters">
-      <label for="filtSite">Site</label>
-      <select id="filtSite">
-        <option value="">All</option>
-        <option value="Long An">ERLA — Long An</option>
-        <option value="Vinh">ECP — Vinh</option>
-      </select>
-      <label for="filtStatus">Status</label>
-      <select id="filtStatus">
-        <option value="">All</option>
-        <option value="Đã hoàn thành">Đã hoàn thành</option>
-        <option value="Hoàn thành">Hoàn thành</option>
-        <option value="Đang xử lý">Đang xử lý</option>
-        <option value="Thời hạn">Thời hạn (scheduled)</option>
-      </select>
-      <label for="filtDept">Department</label>
-      <select id="filtDept">
-        <option value="">All</option>
-      </select>
-      <label for="filtSearch">Search</label>
-      <input id="filtSearch" type="text" placeholder="Vị trí, mô tả..." style="min-width: 200px;" />
-      <span class="stat" id="tableStat"></span>
-    </div>
-    <div class="card" style="padding: 0; overflow: hidden;">
-      <div style="padding: 10px 14px; border-bottom: 1px solid #e5e7eb; background: #fafafa; font-size: 12px; color: #6b7280;">
-        Row-level detail below = <strong>Dec W2 2025</strong> only (251212_Omni_Báo cáo sitecheck Tuần 2 tháng 12.xlsx) — the most recent .xlsx in the folder that the connector returns as fully-readable text. Area + issue text reproduced verbatim from source. Every weekly file from Jan onward is .xlsb and only the summary header is indexed. <a href="https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%2012/251212_Omni_B%C3%A1o%20c%C3%A1o%20sitecheck%20Tu%E1%BA%A7n%202%20th%C3%A1ng%2012.xlsx" target="_blank" rel="noopener">Open source file ↗</a>
-      </div>
-      <div style="max-height: 520px; overflow: auto;">
-        <table id="taskTable">
-          <thead>
-            <tr>
-              <th data-sort="site">Site</th>
-              <th data-sort="area">Vị trí / khu vực</th>
-              <th data-sort="issue">Mô tả vấn đề / lỗi / rủi ro</th>
-              <th data-sort="dept">Bộ phận xử lý</th>
-              <th data-sort="action">Phương án xử lý</th>
-              <th data-sort="status">Tình trạng xử lý</th>
-            </tr>
-          </thead>
-          <tbody id="taskTbody"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <div class="footer-note">
-    <strong>Data caveats.</strong> Outstanding counts come directly from the <em>"SL chưa hoàn thành đến nay"</em> column of each weekly file's summary table — they are point-in-time snapshots, not cumulative. If you see a (?) in the weekly table, the source row was truncated in the SharePoint search index — verify the number by opening the file. The row-level task table only covers Dec W2 2025 because that is the only file the connector returns as fully-readable text; every weekly since Jan 2026 has been .xlsb. To get full row-level detail for subsequent weeks, re-save the .xlsb as .xlsx in OneDrive, or grant Claude in Chrome access so the Excel Online viewer can be read.
-  </div>
-
+  <div class="scope">Eco Long An <strong>+</strong> Eco Vinh</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<div class="snapshot-bar">
+  <div class="snapshot-item">
+    <div class="snapshot-label">Tuần hiện tại</div>
+    <div class="snapshot-value">May W2 2026</div>
+  </div>
+  <div class="snapshot-item">
+    <div class="snapshot-label">Tổng đầu việc tuần</div>
+    <div class="snapshot-value">61 <span class="delta up">▲ +40 (+190.5%)</span></div>
+  </div>
+  <div class="snapshot-item">
+    <div class="snapshot-label">Long An / Vinh tuần</div>
+    <div class="snapshot-value">20 / 41</div>
+  </div>
+  <div class="snapshot-item">
+    <div class="snapshot-label">Còn tồn đến nay</div>
+    <div class="snapshot-value warn">6</div>
+  </div>
+  <div class="snapshot-item">
+    <div class="snapshot-label">Tỷ lệ đóng tuần này</div>
+    <div class="snapshot-value good">90.2%</div>
+  </div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="kpi-label">YTD tổng đầu việc</div><div class="kpi-value">414</div><div class="kpi-sub">18 tuần · TB 23.0/tuần</div></div>
+  <div class="kpi"><div class="kpi-label">YTD Long An</div><div class="kpi-value">222</div><div class="kpi-sub">TB 12.3/tuần</div></div>
+  <div class="kpi"><div class="kpi-label">YTD Vinh</div><div class="kpi-value">192</div><div class="kpi-sub">TB 10.7/tuần</div></div>
+  <div class="kpi warn"><div class="kpi-label">Long An tồn / Vinh tồn</div><div class="kpi-value">3 / 3</div><div class="kpi-sub">Snapshot May W2 2026</div></div>
+</div>
+
+<div class="chart-box">
+  <h3>Đầu việc theo tuần — Long An vs Vinh (raised) + tồn cuối tuần</h3>
+  <canvas id="trendChart"></canvas>
+</div>
+
+<div class="table-box">
+  <div class="table-header">
+    <h3>Dữ liệu chi tiết theo tuần</h3>
+    <div class="count">18 tuần</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tuần</th>
+          <th>LA raised</th>
+          <th>Vinh raised</th>
+          <th>Tổng</th>
+          <th>LA tồn</th>
+          <th>Vinh tồn</th>
+          <th>Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td>Jan W1 2026</td><td class="num">11</td><td class="num">10</td><td class="num strong">21</td><td class="num">9</td><td class="num">0</td><td></td></tr>
+<tr><td>Jan W2 2026</td><td class="num">15</td><td class="num">6</td><td class="num strong">21</td><td class="num">11</td><td class="num">1</td><td></td></tr>
+<tr><td>Jan W3 2026</td><td class="num">12</td><td class="num">6</td><td class="num strong">18</td><td class="num">4</td><td class="num">4</td><td></td></tr>
+<tr><td>Jan W4 2026</td><td class="num">12</td><td class="num">6</td><td class="num strong">18</td><td class="num">10</td><td class="num">4</td><td></td></tr>
+<tr><td>Jan W5 2026</td><td class="num">10</td><td class="num">6</td><td class="num strong">16</td><td class="num">7</td><td class="num">3</td><td></td></tr>
+<tr><td>Feb W1 2026</td><td class="num">14</td><td class="num">5</td><td class="num strong">19</td><td class="num">4</td><td class="num">1</td><td></td></tr>
+<tr><td>Feb W2 2026</td><td class="num">10</td><td class="num">6</td><td class="num strong">16</td><td class="num">—</td><td class="num">—</td><td><span class="note">From Feb W4 history columns; outstanding snapshot N/A</span></td></tr>
+<tr><td>Feb W4 2026</td><td class="num">12</td><td class="num">7</td><td class="num strong">19</td><td class="num">4</td><td class="num">1</td><td><span class="note">W3 file not uploaded</span></td></tr>
+<tr><td>Mar W1 2026</td><td class="num">10</td><td class="num">8</td><td class="num strong">18</td><td class="num">1</td><td class="num">0</td><td></td></tr>
+<tr><td>Mar W2 2026</td><td class="num">12</td><td class="num">10</td><td class="num strong">22</td><td class="num">2</td><td class="num">1</td><td></td></tr>
+<tr><td>Mar W3 2026</td><td class="num">14</td><td class="num">11</td><td class="num strong">25</td><td class="num">1</td><td class="num">2</td><td></td></tr>
+<tr><td>Mar W4 2026</td><td class="num">12</td><td class="num">12</td><td class="num strong">24</td><td class="num">3</td><td class="num">1</td><td></td></tr>
+<tr><td>Apr W1 2026</td><td class="num">14</td><td class="num">12</td><td class="num strong">26</td><td class="num">3</td><td class="num">2</td><td></td></tr>
+<tr><td>Apr W2 2026</td><td class="num">17</td><td class="num">13</td><td class="num strong">30</td><td class="num">7</td><td class="num">2</td><td></td></tr>
+<tr><td>Apr W3 2026</td><td class="num">9</td><td class="num">14</td><td class="num strong">23</td><td class="num">5</td><td class="num">0</td><td></td></tr>
+<tr><td>Apr W4 2026</td><td class="num">7</td><td class="num">9</td><td class="num strong">16</td><td class="num">2</td><td class="num">1</td><td></td></tr>
+<tr><td>May W1 2026</td><td class="num">11</td><td class="num">10</td><td class="num strong">21</td><td class="num">0</td><td class="num">0</td><td></td></tr>
+<tr><td>May W2 2026</td><td class="num">20</td><td class="num">41</td><td class="num strong">61</td><td class="num">3</td><td class="num">3</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  Dashboard tự động cập nhật mỗi tuần · Dữ liệu trích từ file BQLVH tuần · Repo: <a href="https://github.com/ttrng3/Omni-sitecheck" style="color:#60a5fa">ttrng3/Omni-sitecheck</a>
+</div>
+
 <script>
-// ---------- WEEKLY HISTORY (verified against source files) ----------
-const history = [
-  { week: 'Dec W2 ’25', src: '251212_Omni_Báo cáo sitecheck Tuần 2 tháng 12.xlsx', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%2012/251212_Omni_B%C3%A1o%20c%C3%A1o%20sitecheck%20Tu%E1%BA%A7n%202%20th%C3%A1ng%2012.xlsx', laR: 17, vnR: 12, laO: 5, vnO: 2, verified: true },
-  { week: 'Jan W1 ’26', src: '030126_Omni_KVH_ Báo cáo đánh giá kiểm tra CLDV tuần 1 tháng 1 2026.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%201/030126_Omni_KVH_%20B%C3%A1o%20c%C3%A1o%20%C4%91%C3%A1nh%20gi%C3%A1%20ki%E1%BB%83m%20tra%20CLDV%20tu%E1%BA%A7n%201%20th%C3%A1ng%201%202026.xlsb', laR: null, vnR: 10, laO: null, vnO: 0, verified: false, note: 'LA row truncated in index' },
-  { week: 'Jan W2 ’26', src: '020126_KVH_ Báo cáo đánh giá, kiểm tra CLDV tuần 02 tháng 1 năm 2026.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%201/020126_KVH_%20B%C3%A1o%20c%C3%A1o%20%C4%91%C3%A1nh%20gi%C3%A1%2C%20ki%E1%BB%83m%20tra%20CLDV%20tu%E1%BA%A7n%2002%20th%C3%A1ng%201%20n%C4%83m%202026.xlsb', laR: 15, vnR: 6, laO: 11, vnO: 1, verified: true },
-  { week: 'Jan W3 ’26', src: 'Báo cáo Sitecheck tuần 03 tháng 012026 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%201/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2003%20th%C3%A1ng%20012026%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: null, vnR: null, laO: null, vnO: null, verified: false, note: 'Row truncated' },
-  { week: 'Jan W4 ’26', src: 'Báo cáo Sitecheck tuần 04 tháng 01 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%201/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2004%20th%C3%A1ng%2001%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: null, vnR: null, laO: null, vnO: null, verified: false, note: 'Row truncated' },
-  { week: 'Jan W5 ’26', src: 'Báo cáo Sitecheck tuần 05 tháng 01 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%201/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2005%20th%C3%A1ng%2001%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: null, vnR: null, laO: null, vnO: null, verified: false, note: 'Row truncated' },
-  { week: 'Feb W1 ’26', src: 'Báo cáo Sitecheck tuần 01 tháng 02 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%202/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2001%20th%C3%A1ng%2002%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 14, vnR: 5, laO: 4, vnO: 1, verified: true },
-  { week: 'Feb W4 ’26', src: 'Báo cáo Sitecheck tuần 04 tháng 02 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%202/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2004%20th%C3%A1ng%2002%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 12, vnR: 7, laO: null, vnO: null, verified: false, note: 'Raised inferred from Mar W1 prior-week column; outstanding truncated. No W2-W3 Feb files in folder.' },
-  { week: 'Mar W1 ’26', src: 'Báo cáo Sitecheck tuần 01 tháng 03 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%203/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2001%20th%C3%A1ng%2003%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 10, vnR: 8, laO: 1, vnO: 0, verified: true },
-  { week: 'Mar W2 ’26', src: 'Báo cáo Sitecheck tuần 02 tháng 03 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%203/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2002%20th%C3%A1ng%2003%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: null, vnR: null, laO: 2, vnO: 2, verified: false, note: 'Outstanding visible (2/2); raised truncated' },
-  { week: 'Mar W3 ’26', src: 'Báo cáo Sitecheck tuần 03 tháng 03 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%203/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2003%20th%C3%A1ng%2003%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: null, vnR: null, laO: null, vnO: null, verified: false, note: 'Row truncated' },
-  { week: 'Mar W4 ’26', src: 'Báo cáo Sitecheck tuần 04 tháng 03 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%203/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2004%20th%C3%A1ng%2003%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 12, vnR: 12, laO: null, vnO: null, verified: false, note: 'Raised inferred from Apr W1 prior-week column; outstanding truncated' },
-  { week: 'Apr W1 ’26', src: 'Báo cáo Sitecheck tuần 01 tháng 04 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%204/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2001%20th%C3%A1ng%2004%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 14, vnR: 12, laO: 3, vnO: 2, verified: true },
-  { week: 'Apr W2 ’26', src: 'Báo cáo Sitecheck tuần 02 tháng 04 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%204/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2002%20th%C3%A1ng%2004%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 17, vnR: 13, laO: 7, vnO: 2, verified: true },
-  { week: 'Apr W3 ’26', src: 'Báo cáo Sitecheck tuần 03 tháng 04 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%204/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2003%20th%C3%A1ng%2004%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 9, vnR: 14, laO: null, vnO: null, verified: false, note: 'Raised derived from Apr W4 history cols; outstanding truncated' },
-  { week: 'Apr W4 ’26', src: 'Báo cáo Sitecheck tuần 04 tháng 04 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%204/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2004%20th%C3%A1ng%2004%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 7, vnR: 9, laO: 2, vnO: null, verified: false, note: 'Raised cross-confirmed via May W1; VN outstanding truncated' },
-  { week: 'May W1 ’26', src: 'Báo cáo Sitecheck tuần 01 tháng 05 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%205/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2001%20th%C3%A1ng%2005%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 11, vnR: 10, laO: 0, vnO: 0, verified: true },
-  { week: 'May W2 ’26', src: 'Báo cáo Sitecheck tuần 02 tháng 05 các BQL vận hành.xlsb', srcUrl: 'https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20SITECHECK/TH%C3%81NG%205/B%C3%A1o%20c%C3%A1o%20Sitecheck%20tu%E1%BA%A7n%2002%20th%C3%A1ng%2005%20c%C3%A1c%20BQL%20v%E1%BA%ADn%20h%C3%A0nh.xlsb', laR: 20, vnR: 41, laO: 3, vnO: 3, verified: true }
-];
+const labels = ["Jan W1", "Jan W2", "Jan W3", "Jan W4", "Jan W5", "Feb W1", "Feb W2", "Feb W4", "Mar W1", "Mar W2", "Mar W3", "Mar W4", "Apr W1", "Apr W2", "Apr W3", "Apr W4", "May W1", "May W2"];
+const laRaised = [11, 15, 12, 12, 10, 14, 10, 12, 10, 12, 14, 12, 14, 17, 9, 7, 11, 20];
+const vinhRaised = [10, 6, 6, 6, 6, 5, 6, 7, 8, 10, 11, 12, 12, 13, 14, 9, 10, 41];
+const laOpen = [9, 11, 4, 10, 7, 4, 0, 4, 1, 2, 1, 3, 3, 7, 5, 2, 0, 3];
+const vinhOpen = [0, 1, 4, 4, 3, 1, 0, 1, 0, 1, 2, 1, 2, 2, 0, 1, 0, 3];
 
-// ---------- ROW-LEVEL DETAIL BY WEEK ----------
-// Only Dec W2 ’25 has row-level data (the only .xlsx in the source folder).
-// Other weeks will populate here when source files become readable.
-const weekTasks = {};
-// Dec W2 ’25 tasks (verbatim from 251212_Omni_*.xlsx)
-weekTasks['Dec W2 ’25'] = [
-  // BQLVH LONG AN — 17 rows
-  { site: 'Long An', area: 'Kho', issue: 'Công tác quản lý tài sản', dept: 'MTĐT', action: 'Đảm bảo thiết bị, vật tư đảm bảo, đầy đủ giấy tờ, mã tài sản', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Khu vực chung, nhà vệ sinh', issue: 'Không gian chung đảm bảo gọn gàng, sạch sẽ, không có rác nổi. - Mùi tự nhiên, không có các mùi nặng bất thường', dept: 'MTĐT', action: '—', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Khu vực ngoài nhà', issue: 'Hạng mục công trình hoàn thiện ngoài nhà được vệ sinh định kỳ sạch sẽ', dept: 'MTĐT', action: '—', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Khu vực chung', issue: 'Công tác vệ sinh, thu gom rác đảm bảo thùng rác không quá đầy', dept: 'MTĐT', action: '—', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Khu vực trong nhà', issue: 'Hạng mục, công trình hoàn thiện, đồ dùng trong nhà sạch sẽ, kính không có vết dơ, sàn nhà sạch bóng, thơm', dept: 'MTĐT', action: '—', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Khu vực ngoài nhà', issue: 'Nền nhà mẫu bên ngoài bị dơ', dept: 'MTĐT', action: 'Thường xuyên vệ sinh khu vực có nhiều người di chuyển', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Khu vực ngoài nhà', issue: 'Kiểm soát xử lý công trùng trong nhà (Khu vực chung) + ngoài nhà, xử lý mối được thực hiện định kỳ, đảm bảo an toàn', dept: 'MTĐT', action: '—', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Khu vực nhà Đa năng', issue: 'Vệ sinh khu chức năng, phụ trợ đảm bảo theo định kỳ và duy trì hằng ngày', dept: 'MTĐT', action: '—', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'CCDC', issue: 'Công cụ dụng cụ cho CBNV đầy đủ, các dụng cụ đảm bảo tiêu chuẩn phục vụ công tác vệ sinh', dept: 'MTĐT', action: '—', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Phòng camera', issue: 'Dụng cụ sạc, dụng cụ cá nhân để trên vị trí tủ điện', dept: 'AN', action: 'Dời các dụng cụ sạc, dụng cụ cá nhân khỏi các vị trí tủ điên, tủ báo cháy để tránh gây cản trở khi có sự cố.', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'BOT trực an ninh', issue: '_ Các BOT An ninh đảm bảo đầy đủ dụng cụ trực, vật dụng ngăn nắp, vệ sinh tốt. _ Tác phong đồng phục tốt.', dept: 'AN', action: '—', status: 'Đang xử lý' },
-  { site: 'Long An', area: 'Đường dạo hồ thiên nga', issue: 'Đá bị vỡ', dept: 'KT', action: '—', status: 'Đang xử lý' },
-  { site: 'Long An', area: 'Công viên ánh sáng', issue: 'Đá bị vỡ', dept: 'KT', action: '—', status: 'Đang xử lý' },
-  { site: 'Long An', area: 'Nhà Đa Năng', issue: 'Hư hệ thống bản lề, chưa khóa được, nguy cơ mất ATTS', dept: 'KT', action: 'Chỉnh sửa bản lề', status: 'Đang xử lý' },
-  { site: 'Long An', area: 'Nhà Đa Năng', issue: 'Ván ốp trần bị hở mất mỹ quan', dept: 'KT', action: '—', status: 'Đang xử lý' },
-  { site: 'Long An', area: 'Nhà Đa Năng', issue: 'Kính vách vỡ, mất mỹ quan', dept: 'KT', action: 'Đã báo nhà thầu thay kính, đang chờ nhập vật tư. Dự kiến 20/12/2025 hoàn thành.', status: 'Đã hoàn thành' },
-  { site: 'Long An', area: 'Hồ rừng', issue: 'Hồ dơ, lá cây', dept: 'CSKH', action: 'Vệ sinh hồ', status: 'Đã hoàn thành' },
-
-  // BQLVH VINH — 12 rows (note: "Blcok" preserved as in source for rows 10-11)
-  { site: 'Vinh', area: 'Nhà mẫu đơn lập', issue: 'Ghế trang trí ngoài trời xuất hiện tình trạng rỉ sét', dept: 'Kỹ thuật', action: 'Đánh bóng lại', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Block', issue: 'Sàn khu trang trí cổng hoa bị bẩn', dept: 'Môi trường đô thị', action: 'Vệ sinh lại', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'CT01', issue: 'Nền của hầm CT01 bị bẩn', dept: 'Môi trường đô thị', action: 'Vệ sinh lại', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Công viên', issue: 'Vật dụng vui chơi cho trẻ em tại Công viên bị hư hỏng', dept: 'Kỹ thuật Vận hành', action: 'Sửa chửa', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Block', issue: 'Ghế xíc đu tại Block bị gió quật hỏng', dept: 'Kỹ thuật Vận hành', action: 'Thu gom về bảo trì', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Block', issue: 'Bệt tiểu nhà vệ sinh nam Block 3 bị không thoát được nước', dept: 'Kỹ thuật Vận hành', action: 'Sửa chửa', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Block', issue: 'Lá cây khu block bị bám bụi', dept: 'Môi trường đô thị', action: 'Vệ sinh lại', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Block', issue: 'Bảng biển tại block 3 bị hư hỏng', dept: 'Kỹ thuật Vận hành', action: 'Sửa chửa', status: 'Thời hạn hoàn thành 20/12/2025' },
-  { site: 'Vinh', area: 'Nhà mẫu đơn lập', issue: 'Không setup hoa trên bàn', dept: 'Chăm sóc cư dân và Quản lý tiện ích', action: 'Setup lại', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Blcok', issue: 'Thảm setup bị quăn', dept: 'Môi trường đô thị', action: 'Setup lại', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Blcok', issue: 'Không đặt biển hiệu khu vực thi công và quây Barie khu vực thi công', dept: 'An ninh', action: 'Đặt bổ sung', status: 'Hoàn thành' },
-  { site: 'Vinh', area: 'Nhà mẫu thô', issue: 'Lan can bị rỉ sét', dept: 'Kỹ thuật Vận hành', action: 'Bảo trì', status: 'Thời hạn hoàn thành 20/12/2025' }
-];
-
-// Selected week — drives the lower charts and detail table. Defaults to Dec W2 (only week with data).
-let currentWeek = 'Dec W2 ’25';
-function tasksForCurrentWeek() {
-  return weekTasks[currentWeek] || [];
-}
-
-// ---------- HELPERS ----------
-const deptBucket = (d) => {
-  const x = d.toLowerCase();
-  if (x.includes('mtđt') || x.includes('môi trường')) return 'Môi trường đô thị';
-  if (x.includes('kỹ thuật') || x === 'kt') return 'Kỹ thuật / Vận hành';
-  if (x.includes('an ninh') || x === 'an') return 'An ninh';
-  if (x.includes('cskh') || x.includes('chăm sóc')) return 'CSKH / Tiện ích';
-  return d;
-};
-const statusBucket = (s) => {
-  if (s.startsWith('Đã hoàn thành') || s === 'Hoàn thành') return 'Đã hoàn thành';
-  if (s.startsWith('Đang xử lý')) return 'Đang xử lý';
-  if (s.startsWith('Thời hạn')) return 'Theo lịch (scheduled)';
-  return s;
-};
-// Normalise area names (source data has typos + same-place-different-wording).
-// Display-only — the row-level table still shows the verbatim source text.
-const areaNormalize = (a) => {
-  const x = a.trim();
-  if (x === 'Blcok') return 'Block';
-  if (x === 'Khu vực nhà Đa năng' || x === 'Khu vực Nhà Đa năng') return 'Nhà Đa Năng';
-  return x;
-};
-
-// ---------- WEEKLY TABLE (clickable to drill into a week) ----------
-const weeklyTbody = document.getElementById('weeklyTbody');
-weeklyTbody.innerHTML = history.map(w => {
-  const n = (v) => v === null ? '<span class="muted">(?)</span>' : v;
-  const statusTag = w.verified
-    ? '<span class="pill done">verified</span>'
-    : `<span class="pill verify" title="${w.note || 'Partial data — verify in source'}">verify ↗</span>`;
-  const hasDetail = !!weekTasks[w.week];
-  const sel = w.week === currentWeek ? ' selected' : '';
-  return `
-    <tr class="clickable${sel}" data-week="${w.week}" title="${hasDetail ? 'Click to drill into ' + w.week : 'No row-level data for this week (summary-only .xlsb)'}">
-      <td><strong>${w.week}</strong>${hasDetail ? ' <span class="pill done" style="font-size:9px;padding:1px 6px;">detail</span>' : ''}</td>
-      <td><a class="src" href="${w.srcUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">${w.src}</a></td>
-      <td class="n">${n(w.laR)}</td>
-      <td class="n">${n(w.vnR)}</td>
-      <td class="n">${n(w.laO)}</td>
-      <td class="n">${n(w.vnO)}</td>
-      <td>${statusTag}</td>
-    </tr>`;
-}).join('');
-
-// ---------- CHARTS ----------
-const colorLA = '#6366f1';
-const colorVN = '#ec4899';
-const colorDone = '#10b981';
-const colorProgress = '#f59e0b';
-const colorScheduled = '#3b82f6';
-
-// Trend chart — tasks raised per week
-new Chart(document.getElementById('trendChart'), {
+const ctx2 = document.getElementById('trendChart').getContext('2d');
+new Chart(ctx2, {
   type: 'bar',
   data: {
-    labels: history.map(w => w.week),
+    labels: labels,
     datasets: [
-      { label: 'ERLA', data: history.map(w => w.laR), backgroundColor: colorLA, borderRadius: 4 },
-      { label: 'ECP',       data: history.map(w => w.vnR), backgroundColor: colorVN, borderRadius: 4 }
+      { label: 'Long An raised', data: laRaised, backgroundColor: '#3b82f6', stack: 'raised', order: 2 },
+      { label: 'Vinh raised',    data: vinhRaised, backgroundColor: '#8b5cf6', stack: 'raised', order: 2 },
+      { label: 'LA tồn (snapshot)',   data: laOpen,  type: 'line', borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.15)', tension: 0.3, pointRadius: 4, order: 1, fill: false },
+      { label: 'Vinh tồn (snapshot)', data: vinhOpen, type: 'line', borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.15)', tension: 0.3, pointRadius: 4, order: 1, fill: false },
     ]
   },
   options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom' },
-      tooltip: {
-        callbacks: {
-          afterBody: (items) => {
-            const idx = items[0].dataIndex;
-            const w = history[idx];
-            return w.verified ? '' : '(?) partial / unverified';
-          }
-        }
-      }
+      legend: { labels: { color: '#cbd5e1', font: { size: 11 } } },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false }, stacked: true },
+      y: { ticks: { color: '#94a3b8' }, grid: { color: '#1f2937' }, stacked: true, beginAtZero: true }
     }
   }
 });
-
-// Outstanding per week chart — NOT cumulative, just snapshot per file
-new Chart(document.getElementById('outstandingChart'), {
-  type: 'bar',
-  data: {
-    labels: history.map(w => w.week),
-    datasets: [
-      { label: 'ERLA open', data: history.map(w => w.laO), backgroundColor: colorLA, borderRadius: 4 },
-      { label: 'ECP open',    data: history.map(w => w.vnO), backgroundColor: colorVN, borderRadius: 4 }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
-    plugins: {
-      legend: { position: 'bottom' },
-      tooltip: {
-        callbacks: {
-          afterBody: (items) => {
-            const idx = items[0].dataIndex;
-            const w = history[idx];
-            return w.verified ? '' : (w.note ? `(?) ${w.note}` : '(?) partial / unverified');
-          }
-        }
-      }
-    }
-  }
-});
-
-// Status / Dept / Area charts — DEC W2 detail, NOW filter-reactive.
-// Store chart instances so we can update them when the user changes filters.
-
-const statusChartInst = new Chart(document.getElementById('statusChart'), {
-  type: 'pie',
-  data: { labels: [], datasets: [{ data: [], backgroundColor: [colorDone, colorProgress, colorScheduled] }] },
-  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-});
-
-const deptChartInst = new Chart(document.getElementById('deptChart'), {
-  type: 'bar',
-  data: { labels: [], datasets: [{ label: 'Tasks', data: [], backgroundColor: '#8b5cf6', borderRadius: 4 }] },
-  options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }, plugins: { legend: { display: false } } }
-});
-
-const areaChartInst = new Chart(document.getElementById('areaChart'), {
-  type: 'bar',
-  data: { labels: [], datasets: [{ label: 'Tasks', data: [], backgroundColor: '#0ea5e9', borderRadius: 4 }] },
-  options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }, plugins: { legend: { display: false } } }
-});
-
-const badgeStatus = document.getElementById('badgeStatus');
-const badgeDept = document.getElementById('badgeDept');
-const badgeArea = document.getElementById('badgeArea');
-const emptyStatus = document.getElementById('emptyStatus');
-const emptyDept = document.getElementById('emptyDept');
-const emptyArea = document.getElementById('emptyArea');
-
-function setEmpty(isEmpty) {
-  const display = isEmpty ? 'flex' : 'none';
-  const canvasDisplay = isEmpty ? 'none' : 'block';
-  [emptyStatus, emptyDept, emptyArea].forEach(el => { if (el) el.style.display = display; });
-  document.getElementById('statusChart').style.display = canvasDisplay;
-  document.getElementById('deptChart').style.display = canvasDisplay;
-  document.getElementById('areaChart').style.display = canvasDisplay;
-}
-
-function updateLowerCharts(filteredTasks) {
-  // Update header badges to reflect the selected week
-  badgeStatus.textContent = currentWeek;
-  badgeDept.textContent = currentWeek;
-  badgeArea.textContent = currentWeek;
-
-  if (!filteredTasks || filteredTasks.length === 0) {
-    setEmpty(true);
-    return;
-  }
-  setEmpty(false);
-
-  // Status pie
-  const sc = filteredTasks.reduce((acc, t) => { const k = statusBucket(t.status); acc[k] = (acc[k] || 0) + 1; return acc; }, {});
-  statusChartInst.data.labels = Object.keys(sc);
-  statusChartInst.data.datasets[0].data = Object.values(sc);
-  statusChartInst.update();
-
-  // Dept bar
-  const dc = filteredTasks.reduce((acc, t) => { const k = deptBucket(t.dept); acc[k] = (acc[k] || 0) + 1; return acc; }, {});
-  deptChartInst.data.labels = Object.keys(dc);
-  deptChartInst.data.datasets[0].data = Object.values(dc);
-  deptChartInst.update();
-
-  // Area bar (top 10) — normalise typos and same-place-different-wording before counting
-  const ac = filteredTasks.reduce((acc, t) => { const k = areaNormalize(t.area); acc[k] = (acc[k] || 0) + 1; return acc; }, {});
-  const aSorted = Object.entries(ac).sort((a, b) => b[1] - a[1]).slice(0, 10);
-  areaChartInst.data.labels = aSorted.map(([k]) => k);
-  areaChartInst.data.datasets[0].data = aSorted.map(([, v]) => v);
-  areaChartInst.update();
-}
-
-// ---------- TABLE + FILTERS ----------
-const tbody = document.getElementById('taskTbody');
-const filtSite = document.getElementById('filtSite');
-const filtStatus = document.getElementById('filtStatus');
-const filtDept = document.getElementById('filtDept');
-const filtSearch = document.getElementById('filtSearch');
-const tableStat = document.getElementById('tableStat');
-
-function refreshDeptOptions() {
-  const t = tasksForCurrentWeek();
-  const allDepts = [...new Set(t.map(x => deptBucket(x.dept)))].sort();
-  // Reset (keep the "All" option)
-  filtDept.innerHTML = '<option value="">All</option>';
-  allDepts.forEach(d => {
-    const opt = document.createElement('option'); opt.value = d; opt.textContent = d; filtDept.appendChild(opt);
-  });
-}
-refreshDeptOptions();
-
-let sortKey = null, sortDir = 1;
-
-function statusPill(s) {
-  const bucket = statusBucket(s);
-  const cls = bucket === 'Đã hoàn thành' ? 'done' : (bucket === 'Đang xử lý' ? 'progress' : 'scheduled');
-  return `<span class="pill ${cls}">${s}</span>`;
-}
-function sitePill(s) {
-  const code = s === 'Long An' ? 'ERLA' : 'ECP';
-  const cls = s === 'Long An' ? 'LA' : 'VN';
-  return `<span class="pill site-${cls}" title="${s}">${code}</span>`;
-}
-function deptPill(d) {
-  return `<span class="pill dept">${d}</span>`;
-}
-
-function render() {
-  const site = filtSite.value;
-  const status = filtStatus.value;
-  const dept = filtDept.value;
-  const q = filtSearch.value.trim().toLowerCase();
-
-  const weekData = tasksForCurrentWeek();
-  let rows = weekData.filter(t => {
-    if (site && t.site !== site) return false;
-    if (status && !t.status.startsWith(status)) return false;
-    if (dept && deptBucket(t.dept) !== dept) return false;
-    if (q) {
-      const hay = (t.area + ' ' + t.issue + ' ' + t.action + ' ' + t.dept).toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
-    return true;
-  });
-
-  if (sortKey) {
-    rows = rows.slice().sort((a, b) => {
-      const av = (a[sortKey] || '').toString();
-      const bv = (b[sortKey] || '').toString();
-      return av.localeCompare(bv) * sortDir;
-    });
-  }
-
-  // Update the three lower charts to match the current filtered set
-  updateLowerCharts(rows);
-
-  tbody.innerHTML = rows.map(t => `
-    <tr>
-      <td>${sitePill(t.site)}</td>
-      <td>${t.area}</td>
-      <td>${t.issue}</td>
-      <td>${deptPill(t.dept)}</td>
-      <td>${t.action}</td>
-      <td>${statusPill(t.status)}</td>
-    </tr>
-  `).join('');
-
-  tableStat.textContent = `${currentWeek}: ${rows.length} of ${weekData.length} tasks` + (weekData.length === 0 ? ' (no row-level data — pick Dec W2 ’25 in the table above)' : '');
-}
-
-document.querySelectorAll('th[data-sort]').forEach(th => {
-  th.addEventListener('click', () => {
-    const k = th.dataset.sort;
-    if (sortKey === k) sortDir = -sortDir;
-    else { sortKey = k; sortDir = 1; }
-    render();
-  });
-});
-
-[filtSite, filtStatus, filtDept].forEach(el => el.addEventListener('change', render));
-filtSearch.addEventListener('input', render);
-
-// Click a weekly row → drill into that week
-weeklyTbody.addEventListener('click', (e) => {
-  const tr = e.target.closest('tr.clickable');
-  if (!tr) return;
-  const week = tr.dataset.week;
-  if (!week || week === currentWeek) return;
-  currentWeek = week;
-  // Refresh selection highlight
-  weeklyTbody.querySelectorAll('tr.clickable').forEach(r => {
-    r.classList.toggle('selected', r.dataset.week === currentWeek);
-  });
-  // Reset filters when switching weeks so the user sees the full week first
-  filtSite.value = '';
-  filtStatus.value = '';
-  filtSearch.value = '';
-  refreshDeptOptions();
-  render();
-  // Scroll the lower section into view so the user sees the drill update
-  document.getElementById('statusChart').scrollIntoView({ behavior: 'smooth', block: 'center' });
-});
-
-render();
 </script>
+
 </body>
 </html>
