@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OMNI Sitecheck Điều hành</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#FFFFFF; --surface:#FAFAF8; --sunk:#F3F3EF;
+  --ink:#1C1C1A; --ink-soft:#44443F; --muted:#6B6B64; --rule:#E4E4DF;
+  --accent:#0F6E52; --accent-bg:#EAF3EF; --accent-2:#7FA99B;
+  --critical:#B02418; --warning:#9A6B00;
+  --serif:"Playfair Display",Georgia,serif;
+  --sans:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#FFFFFF;color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:26px 24px 64px}
+h1{font-family:var(--serif);font-weight:800;font-size:30px;letter-spacing:-.01em;margin:2px 0 5px;text-wrap:balance}
+.subtitle{color:var(--muted);font-size:12.5px}
+.subtitle strong{color:var(--ink-soft)}
+header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.badge{display:inline-block;padding:3px 9px;background:var(--accent-bg);color:var(--accent);border-radius:4px;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+
+/* verdict */
+.verdict{background:var(--accent-bg);border:1px solid var(--rule);border-left:3px solid var(--critical);border-radius:5px;padding:14px 16px;margin-bottom:16px}
+.verdict .lead{font-family:var(--serif);font-weight:700;font-size:17px;line-height:1.35;color:var(--ink)}
+.verdict p{margin:7px 0 0;color:var(--ink-soft);font-size:12.5px}
+.recon{font-size:12px;color:var(--muted);margin:0 0 20px;padding:9px 13px;border:1px solid var(--rule);border-radius:5px;background:var(--surface)}
+.recon b{color:var(--ink-soft)}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:#FFFFFF;border:1px solid var(--rule);border-radius:8px;padding:13px 15px}
+.kpi .label{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+.kpi .value{font-family:var(--serif);font-size:27px;font-weight:700;margin-top:5px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05}
+.kpi .value.crit{color:var(--critical)}
+.kpi .delta{font-size:11.5px;margin-top:3px;font-variant-numeric:tabular-nums}
+.delta.up{color:var(--warning)} .delta.down{color:var(--accent)} .delta.flat{color:var(--muted)}
+
+/* layout */
+.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.card{background:#FFFFFF;border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+.card h3{margin:0 0 10px;font-size:13.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.chart-wrap{position:relative;height:240px}
+.chart-wrap.tall{height:280px}
+
+/* toggles */
+.view-toggle{display:inline-flex;background:var(--sunk);border-radius:6px;padding:2px}
+.view-toggle button{border:0;background:transparent;padding:4px 10px;font-size:12px;font-weight:600;color:var(--muted);border-radius:4px;cursor:pointer;font-family:inherit}
+.view-toggle button:hover{color:var(--ink)}
+.view-toggle button.active{background:#FFFFFF;color:var(--accent);border:1px solid var(--rule)}
+
+/* filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:11px 14px;background:#FFFFFF;border:1px solid var(--rule);border-radius:8px;margin-bottom:14px}
+.filters label{font-size:12px;color:var(--muted);margin-right:4px}
+.filters select,.filters input{padding:6px 9px;font-size:13px;border:1px solid var(--rule);border-radius:6px;background:#FFFFFF;color:var(--ink);font-family:inherit}
+.filters .stat{margin-left:auto;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--surface);text-align:left;padding:9px 10px;font-weight:600;color:var(--ink-soft);border-bottom:1px solid var(--rule);position:sticky;top:0;cursor:pointer;user-select:none;font-size:11px;letter-spacing:.03em;text-transform:uppercase}
+thead th:hover{background:var(--sunk)}
+thead th .sort-arrow{display:inline-block;margin-left:4px;font-size:10px;opacity:.5}
+thead th.sort-active{background:var(--accent-bg);color:var(--accent)}
+thead th.sort-active .sort-arrow{opacity:1}
+tbody td{padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+tbody tr:hover{background:var(--surface)}
+.num-table td.n{text-align:right;font-variant-numeric:tabular-nums}
+.num-table td.muted{color:var(--muted);font-style:italic}
+.num-table a.src{color:var(--accent);text-decoration:none;font-size:12px}
+.num-table a.src:hover{text-decoration:underline}
+
+/* pills */
+.pill{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap}
+.pill.done{background:var(--accent-bg);color:var(--accent)}
+.pill.progress{background:#FBF4E0;color:var(--warning)}
+.pill.scheduled{background:#EAF1F5;color:#3C5A6B}
+.pill.site-LA{background:#EEF3F1;color:#3C6152}
+.pill.site-VN{background:var(--accent-bg);color:var(--accent)}
+.pill.dept{background:var(--sunk);color:var(--ink-soft)}
+.pill.verify{background:#FBEEEC;color:var(--critical)}
+.ref-badge{display:inline-block;margin-left:6px;padding:1px 7px;background:var(--sunk);color:var(--ink-soft);border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.03em;vertical-align:middle}
+.ref-banner{background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--ink-soft);margin:14px 0}
+.ref-banner strong{color:var(--ink)}
+.empty-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:12px;font-style:italic;padding:0 16px}
+tbody tr.clickable{cursor:pointer}
+tbody tr.clickable:hover{background:var(--accent-bg)}
+tbody tr.selected{background:var(--accent-bg) !important}
+tbody tr.selected td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.footer-note{margin-top:18px;padding:12px 14px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;color:var(--ink-soft);font-size:12px}
+.footer-note a{color:var(--accent)}
+details{font-size:12px;color:var(--muted);margin-top:6px}
+summary{cursor:pointer}
+
+@media (max-width:900px){.grid,.grid-2{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr}}
+@media print{
+  body,.card,.kpi,.filters,.verdict,.ref-banner,.footer-note{background:#fff !important}
+  :root{--muted:#222;--ink-soft:#222}
+  .card,.kpi,section,.grid-3{break-inside:avoid}
+  .view-toggle{display:none}
+  thead th{position:static}
+}
+</style>
+
+
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <span class="badge">Rà soát KSNB · Khối Vận Hành OMNI</span>
+      <h1>OMNI Sitecheck — Điều hành</h1>
+      <div class="subtitle">Nguồn: <strong>OMNI - CÁC TÀI LIỆU / OMNI - SITECHECK</strong> · Mới nhất: <strong>Tuần 01/09/2026</strong> · Lịch sử: <strong>Nov 2025 → Sep 2026 (38 tuần)</strong> · Dựng lại &amp; đối chiếu 09/09/2026</div>
+    </div>
+    <div class="subtitle">Đơn vị: <strong>ERLA — BQLVH Long An</strong> · <strong>ECP — BQLVH Vinh</strong><br>Bấm một tuần trong bảng để lọc biểu đồ + chi tiết theo dòng.</div>
+  </header>
+
+  <div class="verdict">
+    <div class="lead">Trang công bố gốc dừng ở Tuần 03/08 — chậm 14 ngày. Đúng tuần nó không hiển thị thì bức tranh xấu đi.</div>
+    <p>Site gốc báo <b>"98,0% hoàn thành · 1 tồn"</b>. Nguồn đã chạy thêm hai file tuần: đến <b>Tuần 01/09, hoàn thành thực còn 89,8% và tồn 6 đầu việc — toàn bộ ở Long An, hạn ~15/09.</b> Bảng và biểu đồ dưới đây đã dựng lại đủ 38 tuần và mặc định mở Tuần 01/09.</p>
+  </div>
+
+  <section class="kpis">
+    <div class="kpi">
+      <div class="label">Đầu việc Tuần 01/09</div>
+      <div class="value">59</div>
+      <div class="delta up">▲ +19 vs Tuần 04/08 (40)</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Hoàn thành thực (Tuần 01/09)</div>
+      <div class="value crit">89,8%</div>
+      <div class="delta up">site đang hiển thị 98,0%</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Tồn hiện tại</div>
+      <div class="value crit">6</div>
+      <div class="delta up">100% ở Long An · hạn ~15/09</div>
+    </div>
+    <div class="kpi">
+      <div class="label">ERLA — Long An (Tuần 01/09)</div>
+      <div class="value">36</div>
+      <div class="delta up">▲ cao nhất chuỗi 38 tuần · 6 tồn</div>
+    </div>
+    <div class="kpi">
+      <div class="label">ECP — Vinh (Tuần 01/09)</div>
+      <div class="value">23</div>
+      <div class="delta flat">▬ 0 tồn (chuỗi 0-tồn 12 tuần)</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Tỷ trọng Vinh cả kỳ</div>
+      <div class="value">59,2%</div>
+      <div class="delta flat">827 / 1.398 đầu việc · 38 tuần</div>
+    </div>
+  </section>
+
+  <div class="recon"><b>Đối chiếu site ↔ nguồn:</b> Tuần 03/08 khớp tuyệt đối (51, LA21/VN30); site gốc thiếu Tuần 04/08 (40) và Tuần 01/09 (59). <b>KSNB:</b> sheet Vinh Tuần 03/08 trùng khít Tuần 02/08 (nghi copy-paste); Vinh 0-tồn 12 tuần liền — cần xác nhận với BQLVH Vinh. 36 link nguồn gốc thiếu thư mục "OMNI - CÁC TÀI LIỆU" → đã sửa để mở đúng file ở bảng dưới.</div>
+
+  <section>
+    <div class="card">
+      <h3>
+        <span>Tasks per week — total raised, segmented by completed vs outstanding</span>
+        <span class="view-toggle" role="tablist" aria-label="Time window">
+          <button data-view="4" type="button">Last 4w</button>
+          <button data-view="12" type="button" class="active">Last 12w</button>
+          <button data-view="all" type="button">All (38w)</button>
+        </span>
+      </h3>
+      <div class="chart-wrap" style="height: 360px;"><canvas id="combinedChart"></canvas></div>
+      <details><summary>How this is read</summary>
+        For each week, two stacked bars side-by-side: <strong>left = ERLA (Long An)</strong>, <strong>right = ECP (Vinh)</strong>. Each bar's height = tasks that site raised that week. Each bar is segmented: <strong>completed</strong> (emerald for LA, blue for Vinh) at the bottom + <strong>outstanding</strong> (amber for LA, red for Vinh) on top. "Outstanding" = the <em>"SL chưa hoàn thành đến nay"</em> snapshot from that week's own report — point-in-time, not cumulative. Completed = raised − outstanding. Source: weekly .xlsx files in <em>/OMNI - SITECHECK/THÁNG N</em>.
+      </details>
+    </div>
+  </section>
+  <div style="height: 14px;"></div>
+
+  <section>
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div style="padding: 14px 16px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+        <div>
+          <h3 style="margin: 0;">Weekly summary table — crosscheck against source file</h3>
+          <div class="subtitle" style="margin-top: 4px;">Click "View source" to open the file on SharePoint. Numbers come from the "BẢNG TỔNG HỢP" sheet of each weekly file. <strong>Click any column header to sort.</strong></div>
+        </div>
+        <span class="view-toggle" role="tablist" aria-label="Table window">
+          <button data-table-view="4" type="button">Last 4w</button>
+          <button data-table-view="12" type="button" class="active">Last 12w</button>
+          <button data-table-view="all" type="button">All (38w)</button>
+        </span>
+      </div>
+      <div style="max-height: 480px; overflow: auto;">
+        <table class="num-table">
+          <thead>
+            <tr>
+              <th data-wsort="week" id="th-week">Week<span class="sort-arrow">↕</span></th>
+              <th data-wsort="src">Source file<span class="sort-arrow">↕</span></th>
+              <th data-wsort="laR" style="text-align: right;">ERLA<span class="sort-arrow">↕</span></th>
+              <th data-wsort="vnR" style="text-align: right;">ECP<span class="sort-arrow">↕</span></th>
+              <th data-wsort="laO" style="text-align: right;">ERLA open<span class="sort-arrow">↕</span></th>
+              <th data-wsort="vnO" style="text-align: right;">ECP open<span class="sort-arrow">↕</span></th>
+              <th data-wsort="verified">Status<span class="sort-arrow">↕</span></th>
+            </tr>
+          </thead>
+          <tbody id="weeklyTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="ref-banner">
+    <strong>Click any row in the weekly table above</strong> to drill the three charts and the row-level task table below into that week. <strong>Chi tiết theo dòng có ở hầu hết các tuần</strong> (the team converted .xlsb → .xlsx on 21 May 2026). Feb W2 '26 is the only gap — that week had no standalone source file.
+  </div>
+
+  <section class="grid-3" style="margin-top: 14px;">
+    <div class="card">
+      <h3>Status breakdown <span class="ref-badge" id="badgeStatus">Jul W5 '26</span></h3>
+      <div class="chart-wrap"><canvas id="statusChart"></canvas><div class="empty-msg" id="emptyStatus" style="display:none;">No row-level data for this week</div></div>
+    </div>
+    <div class="card">
+      <h3>By handling dept <span class="ref-badge" id="badgeDept">Jul W5 '26</span></h3>
+      <div class="chart-wrap"><canvas id="deptChart"></canvas><div class="empty-msg" id="emptyDept" style="display:none;">No row-level data for this week</div></div>
+    </div>
+    <div class="card">
+      <h3>By area <span class="ref-badge" id="badgeArea">Jul W5 '26</span></h3>
+      <div class="chart-wrap"><canvas id="areaChart"></canvas><div class="empty-msg" id="emptyArea" style="display:none;">No row-level data for this week</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="filters">
+      <label for="filtSite">Site</label>
+      <select id="filtSite">
+        <option value="">All</option>
+        <option value="Long An">ERLA — Long An</option>
+        <option value="Vinh">ECP — Vinh</option>
+      </select>
+      <label for="filtStatus">Status</label>
+      <select id="filtStatus">
+        <option value="">All</option>
+        <option value="Đã hoàn thành">Đã hoàn thành</option>
+        <option value="Hoàn thành">Hoàn thành</option>
+        <option value="Đang xử lý">Đang xử lý</option>
+        <option value="Thời hạn">Thời hạn (scheduled)</option>
+      </select>
+      <label for="filtDept">Department</label>
+      <select id="filtDept">
+        <option value="">All</option>
+      </select>
+      <label for="filtSearch">Search</label>
+      <input id="filtSearch" type="text" placeholder="Vị trí, mô tả..." style="min-width: 200px;" />
+      <span class="stat" id="tableStat"></span>
+    </div>
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div style="padding: 10px 14px; border-bottom: 1px solid #e5e7eb; background: #fafafa; font-size: 12px; color: #6b7280;">
+        Row-level detail below — defaults to <strong id="rowSourceLabel">Jul W5 '26</strong>. Click any week row above to drill in. Area + issue text reproduced verbatim from source.
+      </div>
+      <div style="max-height: 520px; overflow: auto;">
+        <table id="taskTable">
+          <thead>
+            <tr>
+              <th data-sort="site">Site<span class="sort-arrow">↕</span></th>
+              <th data-sort="area">Vị trí / khu vực<span class="sort-arrow">↕</span></th>
+              <th data-sort="issue">Mô tả vấn đề / lỗi / rủi ro<span class="sort-arrow">↕</span></th>
+              <th data-sort="dept">Bộ phận xử lý<span class="sort-arrow">↕</span></th>
+              <th data-sort="action">Phương án xử lý<span class="sort-arrow">↕</span></th>
+              <th data-sort="status">Tình trạng xử lý<span class="sort-arrow">↕</span></th>
+            </tr>
+          </thead>
+          <tbody id="taskTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <strong>Data caveats.</strong> Outstanding counts come directly from the <em>"SL chưa hoàn thành đến nay"</em> column of each weekly file's summary table — they are point-in-time snapshots, not cumulative. Row-level English statuses ("In Progress", "Done") fall through from the SP source schema; the dashboard normalizes them to Vietnamese for display. To see a different week in the detail table, click its row in the weekly table above. Repo: <a href="https://github.com/ttrng3/Omni-sitecheck" target="_blank" rel="noopener">ttrng3/Omni-sitecheck</a>.
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script>
+PLACEHOLDER_DATA_SECTION_TOO_LARGE_FOR_SINGLE_OUTPUT
+</script>
+</body>
+</html>
