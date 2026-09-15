@@ -1,14 +1,16 @@
 name: Archive dashboard snapshot
 
-# Runs server-side whenever index.html changes on main, and copies it to a
-# dated archive path. This exists so the dated snapshot never has to be
-# pushed as a second, separately-transcribed copy of the (large) dashboard
-# HTML by any client — the mirror routine only ever needs to write
-# index.html once; GitHub does the copy.
+# Runs server-side on every push to main and copies index.html to a dated
+# archive path. This exists so the dated snapshot never has to be pushed as
+# a second, separately-transcribed copy of the (large) dashboard HTML by any
+# client — the mirror routine only ever needs to write index.html once;
+# GitHub does the copy. No path filter on purpose: it also self-heals if a
+# stray push ever lands a wrong/corrupted archive file for today without
+# touching index.html in the same push — the next push of any kind on main
+# will notice the mismatch and overwrite it with the correct content.
 on:
   push:
     branches: [main]
-    paths: [index.html]
   workflow_dispatch:
     inputs:
       date:
