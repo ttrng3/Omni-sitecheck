@@ -1,0 +1,47 @@
+name: Archive dashboard snapshot
+
+# Runs server-side whenever index.html changes on main, and copies it to a
+# dated archive path. This exists so the dated snapshot never has to be
+# pushed as a second, separately-transcribed copy of the (large) dashboard
+# HTML by any client — the mirror routine only ever needs to write
+# index.html once; GitHub does the copy.
+on:
+  push:
+    branches: [main]
+    paths: [index.html]
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "UTC date to archive as (YYYY-MM-DD). Defaults to today."
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy index.html to dated archive
+        run: |
+          set -euo pipefail
+          today="${{ inputs.date }}"
+          if [ -z "$today" ]; then
+            today=$(date -u +%Y-%m-%d)
+          fi
+          mkdir -p archive
+          dest="archive/status_${today}.html"
+
+          if [ -f "$dest" ] && cmp -s index.html "$dest"; then
+            echo "Archive for $today already matches index.html; nothing to do."
+            exit 0
+          fi
+
+          cp index.html "$dest"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dest"
+          git commit -m "Auto-archive dashboard snapshot ${today}"
+          git push
