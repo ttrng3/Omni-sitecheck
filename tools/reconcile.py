@@ -5,10 +5,18 @@ GitHub Pages and the claude.ai artifact each hold their own copy of `data/`,
 because an artifact cannot fetch across origins. Two copies can drift. This
 says whether they have, and which way to sync.
 
-Handles all three dashboard schemas: OMNI keys its weeks `history[].week` with
-an ISO `generated`; ECOPM keys them `wk[].id` with a display `generated` plus an
-ISO `generatedUtc`; ECP x ELA carries only a `weeks` manifest, with each week's
-content in its own file. The comparison is the same either way.
+It is deliberately shape-agnostic. These dashboards do not share a schema:
+
+    OMNI         history[].week   + ISO `generated`      slices in data/weeks/
+    ECOPM        wk[].id          + `generatedUtc`       slices in data/weeks/
+    ECP x ELA    weeks{} manifest + `generatedUtc`       slices in data/weeks/
+    TMDV         panels{} manifest+ `generatedUtc`       slices in data/panels/
+
+Earlier versions hardcoded one shape at a time, and each new dashboard was
+silently read as "zero slices" — which reports IN SYNC no matter what drifted.
+So the manifest key and the slice directory are both discovered, not assumed,
+and an index with no recognisable manifest is an error rather than an empty
+comparison.
 
 Usage:
     python3 tools/reconcile.py <dir-a> <dir-b>
@@ -19,63 +27,68 @@ import json
 import pathlib
 import sys
 
+MANIFESTS = ("history", "wk", "weeks", "panels")
+
+
+def slices(root):
+    """Every *.json under data/, keyed by path relative to data/ (minus .json)."""
+    root = pathlib.Path(root)
+    out = {}
+    for p in sorted(root.rglob("*.json")):
+        if p.name == "index.json":
+            continue
+        out[str(p.relative_to(root).with_suffix(""))] = p.read_text(encoding="utf-8")
+    return out
+
 
 def load(root):
-    root = pathlib.Path(root)
-    idx = json.loads((root / "index.json").read_text(encoding="utf-8"))
-    weeks = {p.stem: p.read_text(encoding="utf-8")
-             for p in (root / "weeks").glob("*.json")}
-    return idx, weeks
+    idx = json.loads((pathlib.Path(root) / "index.json").read_text(encoding="utf-8"))
+    return idx, slices(root)
 
 
 def stamp(idx):
-    """The machine-comparable generation time, whichever schema this is."""
     return idx.get("generatedUtc") or idx.get("generated", "")
 
 
-def week_map(idx):
-    """week-key -> the entry, for any of the three dashboard schemas."""
-    if "history" in idx:                      # OMNI: history[].week
-        return {w["week"]: w for w in idx["history"]}
-    if "wk" in idx:                           # ECOPM: wk[].id
-        return {w["id"]: w for w in idx["wk"]}
-    if "weeks" in idx:                        # ECP x ELA: manifest only,
-        return {k: {"slug": v}                # the week's content is its own file
-                for k, v in idx["weeks"].items()}
-    return {}
+def entries(idx, where):
+    """manifest key -> entry, whichever shape this index uses."""
+    for key in MANIFESTS:
+        v = idx.get(key)
+        if isinstance(v, list):
+            return {e.get("week") or e.get("id"): e for e in v}
+        if isinstance(v, dict):
+            return {k: {"slice": s} for k, s in v.items()}
+    sys.exit(f"{where}/index.json has none of {MANIFESTS} — cannot compare; "
+             "add the new shape to MANIFESTS rather than letting it pass.")
 
 
 def main(a_dir, b_dir):
-    (a_idx, a_weeks), (b_idx, b_weeks) = load(a_dir), load(b_dir)
+    (a_idx, a_sl), (b_idx, b_sl) = load(a_dir), load(b_dir)
     diffs = []
 
     a_gen, b_gen = stamp(a_idx), stamp(b_idx)
     if a_gen != b_gen:
-        newer = a_dir if a_gen > b_gen else b_dir
         diffs.append(f"generated differs: {a_dir}={a_gen}  {b_dir}={b_gen}"
-                     f"  -> newer: {newer}")
+                     f"  -> newer: {a_dir if a_gen > b_gen else b_dir}")
 
-    a_hist, b_hist = week_map(a_idx), week_map(b_idx)
-    for wk in sorted(set(a_hist) ^ set(b_hist)):
-        diffs.append(f"week only in {a_dir if wk in a_hist else b_dir}: {wk}")
-    for wk in sorted(set(a_hist) & set(b_hist)):
-        if a_hist[wk] != b_hist[wk]:
-            fields = [k for k in set(a_hist[wk]) | set(b_hist[wk])
-                      if a_hist[wk].get(k) != b_hist[wk].get(k)]
-            diffs.append(f"week {wk} differs on: {', '.join(sorted(fields))}")
+    a_e, b_e = entries(a_idx, a_dir), entries(b_idx, b_dir)
+    for k in sorted(set(a_e) ^ set(b_e)):
+        diffs.append(f"entry only in {a_dir if k in a_e else b_dir}: {k}")
+    for k in sorted(set(a_e) & set(b_e)):
+        if a_e[k] != b_e[k]:
+            fields = sorted(f for f in set(a_e[k]) | set(b_e[k])
+                            if a_e[k].get(f) != b_e[k].get(f))
+            diffs.append(f"entry {k} differs on: {', '.join(fields)}")
 
-    for slug in sorted(set(a_weeks) ^ set(b_weeks)):
-        diffs.append(f"detail file only in "
-                     f"{a_dir if slug in a_weeks else b_dir}: {slug}.json")
-    for slug in sorted(set(a_weeks) & set(b_weeks)):
-        if a_weeks[slug] != b_weeks[slug]:
-            na = len(json.loads(a_weeks[slug]))
-            nb = len(json.loads(b_weeks[slug]))
-            diffs.append(f"detail file {slug}.json differs ({na} vs {nb} rows)")
+    for s in sorted(set(a_sl) ^ set(b_sl)):
+        diffs.append(f"file only in {a_dir if s in a_sl else b_dir}: {s}.json")
+    for s in sorted(set(a_sl) & set(b_sl)):
+        if a_sl[s] != b_sl[s]:
+            diffs.append(f"file {s}.json differs "
+                         f"({len(a_sl[s]):,} vs {len(b_sl[s]):,} chars)")
 
     if not diffs:
-        print(f"IN SYNC — {len(a_hist)} weeks, {len(a_weeks)} detail files, "
-              f"generated {a_gen}")
+        print(f"IN SYNC — {len(a_e)} entries, {len(a_sl)} files, generated {a_gen}")
         return 0
     print(f"DRIFT — {len(diffs)} difference(s):")
     for d in diffs:
