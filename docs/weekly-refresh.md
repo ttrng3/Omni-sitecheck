@@ -135,6 +135,28 @@ not follow on its own. To check and repair:
 Prefer not to need this. Write to the repo, mirror to the artifact, never the
 other way round.
 
+### Why the artifact can't just read the live site
+
+Measured 2026-09-22 with `tools/artifact-fetch-probe.html`, published as an
+artifact with `data/` attached as supporting files:
+
+| From inside a published artifact | Result |
+| --- | --- |
+| `fetch` → `ttrng3.github.io` (cross-origin) | **FAIL** — `TypeError: Failed to fetch` |
+| `<script>` → `cdn.jsdelivr.net/gh/…` | **FAIL** — blocked |
+| `fetch` → `data/…` (its own supporting files) | **PASS** — HTTP 200 |
+| `<script>` → `cdn.jsdelivr.net/npm/…` | **PASS** |
+
+So the artifact must carry its own copy; there is no way to point it at the
+live site. Re-publish that probe if you ever want to re-test whether the
+sandbox has loosened.
+
+One more artifact rule, learned the hard way: publish the **fragment** build,
+starting at `<title>` with no doctype/html/head/body. The artifact service
+wraps whatever you give it, so a complete document nests inside another, the
+inner `<head>` is discarded, and the page renders **blank with no console
+error**.
+
 ## If it stops running
 
 `.github/workflows/freshness-check.yml` opens an issue when `data/index.json`

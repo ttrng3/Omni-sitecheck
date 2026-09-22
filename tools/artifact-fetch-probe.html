@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fetch Probe</title>
+<style>
+:root{--bg:#fff;--fg:#111;--mut:#555;--ok:#065f46;--bad:#991b1b;--card:#f6f6f6;--bd:#ddd}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e0e10;--fg:#eee;--mut:#aaa;--ok:#6ee7b7;--bad:#fca5a5;--card:#1a1a1d;--bd:#333}}
+:root[data-theme="dark"]{--bg:#0e0e10;--fg:#eee;--mut:#aaa;--ok:#6ee7b7;--bad:#fca5a5;--card:#1a1a1d;--bd:#333}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 ui-sans-serif,system-ui,sans-serif;margin:0;padding:24px 16px}
+.w{max-width:640px;margin:0 auto}h1{font-size:19px;margin:0 0 4px}
+p.s{color:var(--mut);margin:0 0 20px;font-size:13px}
+.r{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;margin:10px 0}
+.t{font-weight:600}.ok{color:var(--ok)}.bad{color:var(--bad)}
+pre{white-space:pre-wrap;word-break:break-all;font-size:12px;color:var(--mut);margin:6px 0 0}
+</style></head><body><div class="w">
+<h1>Artifact → GitHub Pages fetch probe</h1>
+<p class="s">Publish this as an artifact (with <code>data/</code> as supporting files) to re-check what a published artifact is allowed to fetch. Results as of 2026-09-22: cross-origin FAIL, jsdelivr <code>/gh/</code> FAIL, relative same-origin PASS, jsdelivr <code>/npm/</code> PASS.</p>
+<div id="out"></div>
+</div>
+<script>
+const out = document.getElementById('out');
+const row = (t, ok, d) => {
+  const e = document.createElement('div'); e.className = 'r';
+  e.innerHTML = `<div class="t ${ok ? 'ok' : 'bad'}">${ok ? 'PASS' : 'FAIL'} — ${t}</div><pre>${d}</pre>`;
+  out.appendChild(e);
+};
+(async () => {
+  try {
+    const r = await fetch('https://ttrng3.github.io/Omni-sitecheck/data/index.json?t=' + Date.now(), { cache: 'no-store' });
+    const j = await r.json();
+    row('index.json', true, `HTTP ${r.status} · currentWeek=${j.currentWeek} · ${j.history.length} weeks · generated ${j.generated}`);
+  } catch (e) { row('index.json', false, e.name + ': ' + e.message); }
+  try {
+    const r = await fetch('https://ttrng3.github.io/Omni-sitecheck/data/weeks/2026-09-W3.json?t=' + Date.now(), { cache: 'no-store' });
+    const j = await r.json();
+    row('weeks/2026-09-W3.json', true, `HTTP ${r.status} · ${j.length} rows · first area "${j[0].area}"`);
+  } catch (e) { row('weeks/2026-09-W3.json', false, e.name + ': ' + e.message); }
+  try {
+    const r = await fetch('data/index.json?t=' + Date.now(), { cache: 'no-store' });
+    const j = await r.json();
+    row('RELATIVE data/index.json (same-origin supporting file)', true, `HTTP ${r.status} · currentWeek=${j.currentWeek} · ${j.history.length} weeks`);
+  } catch (e) { row('RELATIVE data/index.json (same-origin supporting file)', false, e.name + ': ' + e.message); }
+  try {
+    const r = await fetch('data/weeks/2026-09-W3.json?t=' + Date.now(), { cache: 'no-store' });
+    const j = await r.json();
+    row('RELATIVE data/weeks/2026-09-W3.json', true, `HTTP ${r.status} · ${j.length} rows`);
+  } catch (e) { row('RELATIVE data/weeks/2026-09-W3.json', false, e.name + ': ' + e.message); }
+  try {
+    await new Promise((res, rej) => { const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/gh/ttrng3/Omni-sitecheck@main/data/index.json'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    row('jsdelivr /gh/ path reachable', true, 'script tag loaded (CSP allows /gh/)');
+  } catch (e) { row('jsdelivr /gh/ path reachable', false, 'blocked or 404'); }
+  try {
+    await new Promise((res, rej) => { const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    row('Chart.js from jsdelivr', true, 'loaded, version ' + (window.Chart ? Chart.version : '?'));
+  } catch (e) { row('Chart.js from jsdelivr', false, 'script load blocked'); }
+})();
+</script></body></html>
