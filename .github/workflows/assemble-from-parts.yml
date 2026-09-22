@@ -1,0 +1,58 @@
+name: Assemble dashboard from parts
+
+# Lets the mirror routine push a large dashboard HTML file as several small,
+# byte-exact part files (each well under any single-call size limit) instead
+# of retyping the whole (large, diacritic-heavy) file in one shot. This
+# workflow concatenates the parts server-side, byte-for-byte, with no
+# reformatting, writes the destination file, and removes the parts dir.
+on:
+  workflow_dispatch:
+    inputs:
+      parts_dir:
+        description: "Directory containing ordered part files (sorted by filename)"
+        required: false
+        default: ".sync/index-parts"
+      dest:
+        description: "Destination file path to write"
+        required: false
+        default: "index.html"
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Concatenate parts into destination (byte-exact)
+        run: |
+          set -euo pipefail
+          parts_dir="${{ inputs.parts_dir }}"
+          dest="${{ inputs.dest }}"
+
+          if [ ! -d "$parts_dir" ]; then
+            echo "Parts dir $parts_dir does not exist" >&2
+            exit 1
+          fi
+
+          tmp="$(mktemp)"
+          # Sort by filename so zero-padded part_000.txt, part_001.txt, ... concatenate in order.
+          find "$parts_dir" -maxdepth 1 -type f -name 'part_*.txt' | sort | xargs -I{} cat {} >> "$tmp"
+
+          mkdir -p "$(dirname "$dest")"
+          mv "$tmp" "$dest"
+          git rm -r --quiet "$parts_dir"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$dest"
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "Assemble ${dest} from parts (mirror update)"
+          git push
