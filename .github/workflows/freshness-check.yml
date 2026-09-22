@@ -14,7 +14,8 @@ permissions:
   issues: write
 
 env:
-  MAX_AGE_DAYS: 10
+  MAX_RUN_AGE_DAYS: 10
+  MAX_DATA_AGE_DAYS: 24
 
 jobs:
   check:
@@ -32,14 +33,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          title="Sitecheck data is stale (${{ steps.age.outputs.days }} days)"
+          title="Sitecheck dashboard: ${{ steps.age.outputs.why }}"
           existing=$(gh issue list --state open --label stale-data --json number --jq '.[0].number // empty')
           body=$(printf '%s\n' \
             "\`data/index.json\` was last generated **${{ steps.age.outputs.generated }}** (${{ steps.age.outputs.days }} days ago)." \
             "Latest week published: **${{ steps.age.outputs.week }}**." \
             "" \
             "The weekly refresh has not run. Check the scheduled routine, then re-run it." \
-            "Threshold: ${MAX_AGE_DAYS} days.")
+            "Thresholds: run ${MAX_RUN_AGE_DAYS}d, data ${MAX_DATA_AGE_DAYS}d.")
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --body "$body"
           else
