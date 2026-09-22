@@ -1,0 +1,17 @@
+# Never commit credentials. The weekly job reads its token from an
+# account-level store (see docs/weekly-refresh.md), never from this tree.
+.github-token
+.github-token.save
+*.save
+*.token
+
+# Local Cowork working files — this checkout doubles as the Cowork artifact
+# folder, which keeps its own scratch alongside the repo.
+.DS_Store
+thumbnail.png
+versions/
+debug.jsonl
+CHANGELOG.md
+SKILL.md.proposed
+sitecheck-history.json
+sitecheck-refresh-*.md
