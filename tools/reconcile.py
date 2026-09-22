@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-"""Compare two copies of the dashboard data and say which one is authoritative.
+"""Compare two copies of a dashboard's data and say which one is authoritative.
 
-The GitHub Pages site and the claude.ai artifact each hold their own copy of
-`data/`, because an artifact is not permitted to fetch across origins. Two
-copies can drift. This tells you whether they have, and which way to sync.
+GitHub Pages and the claude.ai artifact each hold their own copy of `data/`,
+because an artifact cannot fetch across origins. Two copies can drift. This
+says whether they have, and which way to sync.
+
+Handles both dashboard schemas: OMNI keys its weeks `history[].week` with an
+ISO `generated`; ECOPM keys them `wk[].id` with a display `generated` plus an
+ISO `generatedUtc`. The comparison is the same either way.
 
 Usage:
     python3 tools/reconcile.py <dir-a> <dir-b>
 
-Each directory is a `data/` tree (index.json + weeks/*.json). Exits 0 when the
-two agree, 1 when they differ.
+Each directory is a `data/` tree. Exits 0 when they agree, 1 when they differ.
 """
 import json
 import pathlib
@@ -24,22 +27,29 @@ def load(root):
     return idx, weeks
 
 
+def stamp(idx):
+    """The machine-comparable generation time, whichever schema this is."""
+    return idx.get("generatedUtc") or idx.get("generated", "")
+
+
+def week_map(idx):
+    """week-key -> the whole entry, for either schema."""
+    if "history" in idx:
+        return {w["week"]: w for w in idx["history"]}
+    return {w["id"]: w for w in idx.get("wk", [])}
+
+
 def main(a_dir, b_dir):
     (a_idx, a_weeks), (b_idx, b_weeks) = load(a_dir), load(b_dir)
     diffs = []
 
-    a_gen, b_gen = a_idx.get("generated", ""), b_idx.get("generated", "")
+    a_gen, b_gen = stamp(a_idx), stamp(b_idx)
     if a_gen != b_gen:
         newer = a_dir if a_gen > b_gen else b_dir
         diffs.append(f"generated differs: {a_dir}={a_gen}  {b_dir}={b_gen}"
                      f"  -> newer: {newer}")
 
-    if a_idx.get("currentWeek") != b_idx.get("currentWeek"):
-        diffs.append(f"currentWeek differs: {a_idx.get('currentWeek')!r} vs "
-                     f"{b_idx.get('currentWeek')!r}")
-
-    a_hist = {h["week"]: h for h in a_idx["history"]}
-    b_hist = {h["week"]: h for h in b_idx["history"]}
+    a_hist, b_hist = week_map(a_idx), week_map(b_idx)
     for wk in sorted(set(a_hist) ^ set(b_hist)):
         diffs.append(f"week only in {a_dir if wk in a_hist else b_dir}: {wk}")
     for wk in sorted(set(a_hist) & set(b_hist)):
@@ -53,7 +63,8 @@ def main(a_dir, b_dir):
                      f"{a_dir if slug in a_weeks else b_dir}: {slug}.json")
     for slug in sorted(set(a_weeks) & set(b_weeks)):
         if a_weeks[slug] != b_weeks[slug]:
-            na, nb = len(json.loads(a_weeks[slug])), len(json.loads(b_weeks[slug]))
+            na = len(json.loads(a_weeks[slug]))
+            nb = len(json.loads(b_weeks[slug]))
             diffs.append(f"detail file {slug}.json differs ({na} vs {nb} rows)")
 
     if not diffs:
@@ -63,8 +74,8 @@ def main(a_dir, b_dir):
     print(f"DRIFT — {len(diffs)} difference(s):")
     for d in diffs:
         print("  -", d)
-    print("\nThe copy with the newer `generated` is authoritative. Copy its "
-          "files over the other, then republish that side.")
+    print("\nThe copy with the newer generation stamp is authoritative. Copy "
+          "its files over the other, then republish that side.")
     return 1
 
 
