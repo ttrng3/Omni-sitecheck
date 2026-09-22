@@ -37,8 +37,21 @@ different — taking them would silently corrupt the series.
 
 ### 2. Stop if nothing is new
 
-Read `data/index.json` from the repo. If its last `history` week is already the
-newest source week, report "no new data" and stop. Do not write anything.
+**Always write the heartbeat first, on every run, before anything else.** Write
+`data/.last-check` with one line: the current UTC timestamp as
+`%Y-%m-%dT%H:%M:%SZ`, a space, then `newest-source=<week or filename>`, and
+commit it. Do this even on a quiet run when there is no new week.
+
+It earns its keep twice. It is the only thing that distinguishes *"the job ran
+and there was nothing new"* from *"the job stopped running"* — `data/index.json`
+looks identical in both cases, which is exactly the silent failure this rebuild
+exists to fix. And because it writes every week, it exercises the GitHub write
+path every week, so a broken write path surfaces on a quiet Monday instead of
+on the one Monday that actually has data.
+
+Then: if `data/index.json`'s last `history` week is already the newest source
+week, commit just the heartbeat, report "no new data — last published was X",
+and stop. Never an empty commit, and never a data write you did not verify.
 
 ### 3. Read the workbook
 
