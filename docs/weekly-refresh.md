@@ -105,10 +105,35 @@ one number.
 The GitHub token must be reachable **from wherever this runs**. A path under
 `/Users/tytr3/` is not, which is the failure this rebuild exists to fix.
 
-Use a fine-grained PAT scoped to `ttrng3/Omni-sitecheck` only, Contents:
-Read and write, stored somewhere the cloud can read it — a private Google Drive
-file works, since the Drive connector is account-level. Regenerate at
+Use a fine-grained PAT, Resource owner `ttrng3`, Only select repositories →
+`ttrng3/Omni-sitecheck`, Contents: Read and write, and nothing else. Mint it at
 https://github.com/settings/personal-access-tokens/new
+
+Keep it in the private Drive `_secrets` folder this account already uses for
+per-repo tokens, named for this repo, and read it through the Drive connector —
+that connector is account-level, so it works from a cloud run. Never echo it,
+never write it into this repo, never commit it (see `.gitignore`). On a 401 the
+PAT has expired or been revoked: say so plainly and stop rather than retrying.
+
+## Keeping the two copies in sync
+
+The Pages site and the artifact each hold their own `data/`, because an artifact
+cannot fetch across origins and must carry its own copy. **The repo is the
+source of truth** — write there first, then mirror the same two files to the
+artifact in the same run. Done that way they never diverge.
+
+There is no outbound hook from an artifact: nothing tells GitHub when one is
+republished. So if anyone edits the artifact's data directly, the web page will
+not follow on its own. To check and repair:
+
+1. Download the artifact's `data/` (Artifact read, `paths`).
+2. `python3 tools/reconcile.py data <downloaded-dir>` — it names the
+   authoritative copy by `generated`, lists exactly what differs, and exits
+   non-zero on drift.
+3. Copy the newer side over the older, and republish that side.
+
+Prefer not to need this. Write to the repo, mirror to the artifact, never the
+other way round.
 
 ## If it stops running
 
