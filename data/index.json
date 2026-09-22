@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-22T04:31:32Z",
+ "generated": "2026-09-22T04:44:21Z",
  "currentWeek": "Sep W3 ’26",
  "detail": {
   "Nov W4 ’25": "2025-11-W4",
@@ -440,7 +440,8 @@
    "vnR": 46,
    "laO": 16,
    "vnO": 0,
-   "verified": true
+   "verified": true,
+   "note": "TH 14/09: LA nêu 64 / tồn 16, Vinh nêu 46 / tồn 0. ✓ĐC Vinh: 46 dòng nhưng chỉ 31 đầu việc thật — dòng 34–46 trùng khít dòng 15–27 (copy-paste 13 dòng), cần xác nhận với BQLVH Vinh. Long An: đã đọc đủ 64 dòng từ sheet “Tuần 2 tháng 9”, khớp TH. 16 tồn 100% ở Long An, hạn ~15/09."
   },
   {
    "week": "Sep W3 ’26",
@@ -451,7 +452,7 @@
    "laO": 32,
    "vnO": 1,
    "verified": true,
-   "note": "Chi tiết Vinh có 48 dòng so với 44 ở bảng TH (4 dòng cuối đánh số lặp trong file nguồn); Long An 53 dòng so với 54. Dùng số dòng thực tế."
+   "note": "TH 21/09: LA nêu 54 / tồn 32, Vinh nêu 44 / tồn 1, tổng 98 / tồn 33 (✓ĐC khớp SUM). Chi tiết Long An 53 dòng (vs TH 54, lệch 1 dòng) — chỉ 10 đầu việc “Đang xử lý” + 2 “Xử lý sau thi công” = 12 chưa xong trong tuần, nên 32 tồn của TH gồm ~20 tồn luỹ kế từ các tuần trước, KHÔNG liệt kê trong sheet tuần này. Chi tiết Vinh 48 dòng (vs TH 44) — 4 dòng cuối đánh số lặp trong file nguồn. Vinh 1 tồn — lần đầu khác 0 sau chuỗi 13 tuần. Đã quá hạn 15/09."
   }
  ]
 }
