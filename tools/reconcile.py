@@ -5,9 +5,10 @@ GitHub Pages and the claude.ai artifact each hold their own copy of `data/`,
 because an artifact cannot fetch across origins. Two copies can drift. This
 says whether they have, and which way to sync.
 
-Handles both dashboard schemas: OMNI keys its weeks `history[].week` with an
-ISO `generated`; ECOPM keys them `wk[].id` with a display `generated` plus an
-ISO `generatedUtc`. The comparison is the same either way.
+Handles all three dashboard schemas: OMNI keys its weeks `history[].week` with
+an ISO `generated`; ECOPM keys them `wk[].id` with a display `generated` plus an
+ISO `generatedUtc`; ECP x ELA carries only a `weeks` manifest, with each week's
+content in its own file. The comparison is the same either way.
 
 Usage:
     python3 tools/reconcile.py <dir-a> <dir-b>
@@ -33,10 +34,15 @@ def stamp(idx):
 
 
 def week_map(idx):
-    """week-key -> the whole entry, for either schema."""
-    if "history" in idx:
+    """week-key -> the entry, for any of the three dashboard schemas."""
+    if "history" in idx:                      # OMNI: history[].week
         return {w["week"]: w for w in idx["history"]}
-    return {w["id"]: w for w in idx.get("wk", [])}
+    if "wk" in idx:                           # ECOPM: wk[].id
+        return {w["id"]: w for w in idx["wk"]}
+    if "weeks" in idx:                        # ECP x ELA: manifest only,
+        return {k: {"slug": v}                # the week's content is its own file
+                for k, v in idx["weeks"].items()}
+    return {}
 
 
 def main(a_dir, b_dir):
