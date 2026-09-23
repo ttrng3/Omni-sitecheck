@@ -19,9 +19,9 @@ The old skill was built around three assumptions that are all now false:
 
 ## Runs where?
 
-Anywhere with (a) the Microsoft 365 connector and (b) a GitHub token. Both are
-account-level, not machine-level, so this runs in a cloud routine with the lid
-shut. No step requires the Mac.
+Anywhere with the Microsoft 365 connector and the GitHub MCP file tools. Both
+are account-level, not machine-level, so this runs in a cloud routine with the
+lid shut. No step requires the Mac, and no step requires a token.
 
 ## Steps
 
@@ -99,18 +99,18 @@ one number.
 
 ## Credentials
 
-The GitHub token must be reachable **from wherever this runs**. A path under
-`/Users/tytr3/` is not, which is the failure this rebuild exists to fix.
+**None.** Write with the **GitHub MCP file tools** — `get_file_contents` for the
+current blob sha, then `create_or_update_file` on `main`. They carry their own
+account-level authorization, so this repo needs no token anywhere.
 
-Use a fine-grained PAT, Resource owner `ttrng3`, Only select repositories →
-`ttrng3/Omni-sitecheck`, Contents: Read and write, and nothing else. Mint it at
-https://github.com/settings/personal-access-tokens/new
+This section used to tell you to mint a fine-grained PAT and read it from a
+Drive `_secrets` folder. That advice outlived its purpose: the 2026-09-22 run
+and every run since wrote via the MCP tools, and the PAT was never actually
+in the path. It was revoked on 2026-09-23. **Do not mint a replacement**, and
+do not reintroduce a token-in-URL push — a non-expiring write credential
+sitting in a synced folder is a standing risk for no gain.
 
-Keep it in the private Drive `_secrets` folder this account already uses for
-per-repo tokens, named for this repo, and read it through the Drive connector —
-that connector is account-level, so it works from a cloud run. Never echo it,
-never write it into this repo, never commit it (see `.gitignore`). On a 401 the
-PAT has expired or been revoked: say so plainly and stop rather than retrying.
+If a write fails, report the error rather than reaching for a token.
 
 ## If it stops running
 
