@@ -100,11 +100,23 @@ files to `https://claude.ai/artifact/J5bcB2tayCH3B5ByZsz4xh` with `url` set and
 a small write.
 
 **Do not republish the artifact's `index.html` unless the renderer changed.**
-If you do, publish the **fragment** build, not the repo's `index.html`: the
-artifact service wraps what you give it in its own `<html><head><body>`, so
-publishing a complete document nests one document inside another, the inner
-`<head>` is discarded, and the page renders blank. The fragment starts at
-`<title>` with no doctype/html/head/body tags.
+If you do, run `python3 tools/build-fragment.py` and publish `build/artifact.html`
+— never the repo's `index.html`. The artifact service wraps what you give it in
+its own `<html><head><body>`, so publishing a complete document nests one
+document inside another, the inner `<head>` is discarded, and the page renders
+blank with no console error. The script strips the wrappers, drops the charset
+and viewport metas (the service supplies its own, carrying `viewport-fit=cover`,
+and a second viewport meta would override it), and refuses to write a fragment
+that still contains a document tag.
+
+**Diff the live artifact against the repo before rebuilding.** On Omni-TMDV the
+artifact was found to be *ahead* of the repo on 2026-09-23 — four layout fixes
+had been made in the artifact and never committed, and rebuilding the fragment
+would have reverted them silently. Read the artifact's `index.html` with the
+Artifact tool's `path` argument and diff it against a fresh `build/artifact.html`;
+the only differences should be the service wrapper on line 1 and trailing blank
+lines. Anything else is a fix that needs committing first. "Repo is truth" says
+where edits belong, not where they are.
 
 ### 6. Report
 

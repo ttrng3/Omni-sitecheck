@@ -71,3 +71,30 @@ use them to record source discrepancies rather than silently smoothing them.
 - Detail row counts occasionally differ from the `TH` summary by a few rows
   (duplicated or renumbered rows in the source workbook). The real rows are
   used and the discrepancy is recorded in that week's `note`.
+
+## Visual standard
+
+Since 2026-09-23 the renderer follows the **Ty Artifact Standard** — the house
+Apple-HIG treatment that governs every artifact, not just this one. The skill
+`ty-artifact-standard` holds the full rules; the reference page is
+https://claude.ai/artifact/FjfqnpwZoftL7T3Vehvtfr. It replaced the warm-paper /
+Playfair treatment.
+
+- Page ground `#F2F2F7`, cards `#FFFFFF` at 12 px radius, hairlines
+  `1px solid #E5E5EA`, no drop shadows.
+- System font stack only. **Do not add a webfont link back.**
+- Ink in three tiers: `#1C1C1E` primary, `#3C3C43` body, `#8E8E93` muted.
+- Semantic accents: blue `#007AFF` active/info, green `#34C759` done, amber
+  `#FF9500` outstanding, red `#FF3B30` critical. Pill text uses a darkened ink
+  of the same hue on a tint, because the raw hexes fail contrast at 12 px.
+- **A status pill carries a dot and a word.** Identity pills (site, department)
+  carry no dot, so a dot always means "this is a state".
+- Chart.js: `c_LA_done` green, `c_LA_open` amber, `c_VN_done` blue,
+  `c_VN_open` red, with `borderWidth: 2` and a white `borderColor` between
+  stacked segments. That border is the second cue green and amber need under
+  protanopia — **do not set it back to 0.**
+- The `@media print` block and the `beforeprint` hook that expands every
+  `<details>` are load-bearing; this page gets photocopied.
+
+A refresh writes `data/`, never the stylesheet. If a refresh finds itself
+editing CSS, something has gone wrong — stop and ask.
