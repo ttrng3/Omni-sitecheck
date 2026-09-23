@@ -103,8 +103,11 @@ The chain is **repo-first**, the same shape KSNB has always used:
     schedule → cloud routine → source → GitHub → Pages → artifact mirrored after
 
 **The repo is the source of truth and Pages is the live surface.** The artifact
-at https://claude.ai/artifact/Y8shYuiKTK9gXM82QE5Lvu is a **mirror**, published *after* the repo
-is correct, and it is never authoritative. If the two ever disagree, the repo
+is a **mirror**, published *after* the repo is correct, and never authoritative.
+**Its URL is not recorded here on purpose.** The Pages link above is this page's
+address; a claude.ai artifact link would be a second address for the same thing,
+and a private one most readers of this repo could not open anyway. The routine
+prompt holds the target URL, because that is the only place that needs it. If the two ever disagree, the repo
 wins and the artifact is what gets corrected.
 
 How a refresh mirrors it, in this order:
