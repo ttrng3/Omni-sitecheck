@@ -5,8 +5,7 @@ Live dashboard: **https://ttrng3.github.io/Omni-sitecheck/**
 ## How this repo is the source of truth
 
 This repo is the single place the sitecheck numbers live. Everything else —
-the GitHub Pages site, the claude.ai artifact, any Drive copy — **reads** from
-here. Nothing writes to the dashboard by copying HTML around.
+the GitHub Pages site, any Drive copy — **reads** from here. Nothing writes to the dashboard by copying HTML around.
 
 ```
 SharePoint (OMNI - CÁC TÀI LIỆU / OMNI - SITECHECK)
@@ -14,18 +13,17 @@ SharePoint (OMNI - CÁC TÀI LIỆU / OMNI - SITECHECK)
         ▼
 weekly refresh job  ──writes──▶  data/index.json + data/weeks/<week>.json
                                           │
-                        ┌─────────────────┼─────────────────┐
-                        ▼                 ▼                 ▼
-                 GitHub Pages     claude.ai artifact    any other viewer
-                 (index.html)     (same index.html)
+                                ┌─────────┴─────────┐
+                                ▼                   ▼
+                         GitHub Pages        any other viewer
+                         (index.html)
 ```
 
 `index.html` is a **renderer with no data baked in**. It fetches `data/` at
 load time — relative first, then falling back to the published
 `https://ttrng3.github.io/Omni-sitecheck/data/`. That fallback is why the same
-file works unchanged as a GitHub Pages site, as a claude.ai artifact, and from
-a local copy. Update the data and every surface is current on next load; no
-artifact needs republishing.
+file works unchanged as a GitHub Pages site and from a local copy. Update the
+data and every surface is current on next load.
 
 ## Layout
 
@@ -75,10 +73,9 @@ use them to record source discrepancies rather than silently smoothing them.
 ## Visual standard
 
 Since 2026-09-23 the renderer follows the **Ty Artifact Standard** — the house
-Apple-HIG treatment that governs every artifact, not just this one. The skill
-`ty-artifact-standard` holds the full rules; the reference page is
-https://claude.ai/artifact/FjfqnpwZoftL7T3Vehvtfr. It replaced the warm-paper /
-Playfair treatment.
+Apple-HIG treatment that governs every page Ty builds, not just this one. The
+skill `ty-artifact-standard` holds the full rules, and is the only place they
+live. It replaced the warm-paper / Playfair treatment.
 
 - Page ground `#F2F2F7`, cards `#FFFFFF` at 12 px radius, hairlines
   `1px solid #E5E5EA`, no drop shadows.

@@ -90,35 +90,7 @@ History entry shape:
 `week` uses a curly apostrophe (`’26`), and the slug for `Sep W3 ’26` is
 `2026-09-W3`. Both matter — the manifest maps one to the other.
 
-### 5. Mirror the same two files to the artifact
-
-The claude.ai artifact carries **its own copy** of `data/`, because an artifact
-is not allowed to fetch across origins (verified: fetching github.io from an
-artifact fails, and jsdelivr's `/gh/` path is blocked too). Publish the same two
-files to `https://claude.ai/artifact/J5bcB2tayCH3B5ByZsz4xh` with `url` set and
-`files` carrying only the changed paths — files left out are kept, so this stays
-a small write.
-
-**Do not republish the artifact's `index.html` unless the renderer changed.**
-If you do, run `python3 tools/build-fragment.py` and publish `build/artifact.html`
-— never the repo's `index.html`. The artifact service wraps what you give it in
-its own `<html><head><body>`, so publishing a complete document nests one
-document inside another, the inner `<head>` is discarded, and the page renders
-blank with no console error. The script strips the wrappers, drops the charset
-and viewport metas (the service supplies its own, carrying `viewport-fit=cover`,
-and a second viewport meta would override it), and refuses to write a fragment
-that still contains a document tag.
-
-**Diff the live artifact against the repo before rebuilding.** On Omni-TMDV the
-artifact was found to be *ahead* of the repo on 2026-09-23 — four layout fixes
-had been made in the artifact and never committed, and rebuilding the fragment
-would have reverted them silently. Read the artifact's `index.html` with the
-Artifact tool's `path` argument and diff it against a fresh `build/artifact.html`;
-the only differences should be the service wrapper on line 1 and trailing blank
-lines. Anything else is a fix that needs committing first. "Repo is truth" says
-where edits belong, not where they are.
-
-### 6. Report
+### 5. Report
 
 Long An and Vinh raised/open, week-over-week delta, closure rate, one thing
 that stands out, and the commit sha. If the detail row count disagrees with the
@@ -139,48 +111,6 @@ per-repo tokens, named for this repo, and read it through the Drive connector �
 that connector is account-level, so it works from a cloud run. Never echo it,
 never write it into this repo, never commit it (see `.gitignore`). On a 401 the
 PAT has expired or been revoked: say so plainly and stop rather than retrying.
-
-## Keeping the two copies in sync
-
-The Pages site and the artifact each hold their own `data/`, because an artifact
-cannot fetch across origins and must carry its own copy. **The repo is the
-source of truth** — write there first, then mirror the same two files to the
-artifact in the same run. Done that way they never diverge.
-
-There is no outbound hook from an artifact: nothing tells GitHub when one is
-republished. So if anyone edits the artifact's data directly, the web page will
-not follow on its own. To check and repair:
-
-1. Download the artifact's `data/` (Artifact read, `paths`).
-2. `python3 tools/reconcile.py data <downloaded-dir>` — it names the
-   authoritative copy by `generated`, lists exactly what differs, and exits
-   non-zero on drift.
-3. Copy the newer side over the older, and republish that side.
-
-Prefer not to need this. Write to the repo, mirror to the artifact, never the
-other way round.
-
-### Why the artifact can't just read the live site
-
-Measured 2026-09-22 with `tools/artifact-fetch-probe.html`, published as an
-artifact with `data/` attached as supporting files:
-
-| From inside a published artifact | Result |
-| --- | --- |
-| `fetch` → `ttrng3.github.io` (cross-origin) | **FAIL** — `TypeError: Failed to fetch` |
-| `<script>` → `cdn.jsdelivr.net/gh/…` | **FAIL** — blocked |
-| `fetch` → `data/…` (its own supporting files) | **PASS** — HTTP 200 |
-| `<script>` → `cdn.jsdelivr.net/npm/…` | **PASS** |
-
-So the artifact must carry its own copy; there is no way to point it at the
-live site. Re-publish that probe if you ever want to re-test whether the
-sandbox has loosened.
-
-One more artifact rule, learned the hard way: publish the **fragment** build,
-starting at `<title>` with no doctype/html/head/body. The artifact service
-wraps whatever you give it, so a complete document nests inside another, the
-inner `<head>` is discarded, and the page renders **blank with no console
-error**.
 
 ## If it stops running
 
