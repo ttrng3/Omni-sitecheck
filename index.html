@@ -187,7 +187,7 @@ summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-ra
 
   <section>
     <div class="card" style="padding: 0; overflow: hidden;">
-      <div style="padding: 14px 16px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+      <div style="padding: 14px 16px; border-bottom: 1px solid #E5E5EA; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
         <div>
           <h3 style="margin: 0;">Weekly summary table — crosscheck against source file</h3>
           <div class="subtitle" style="margin-top: 4px;">Click "View source" to open the file on SharePoint. Numbers come from the "BẢNG TỔNG HỢP" sheet of each weekly file. <strong>Click any column header to sort.</strong></div>
@@ -261,7 +261,7 @@ summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-ra
       <span class="stat" id="tableStat"></span>
     </div>
     <div class="card" style="padding: 0; overflow: hidden;">
-      <div style="padding: 10px 14px; border-bottom: 1px solid #e5e7eb; background: #fafafa; font-size: 12px; color: #6b7280;">
+      <div style="padding: 10px 14px; border-bottom: 1px solid #E5E5EA; background: #FFFFFF; font-size: 12px; color: #8E8E93;">
         Row-level detail below — defaults to <strong id="rowSourceLabel">Jul W5 ’26</strong>. Click any week row above to drill in. Area + issue text reproduced verbatim from source.
       </div>
       <div style="max-height: 520px; overflow: auto;">
@@ -739,7 +739,7 @@ function showFatal(err) {
   const w = document.querySelector('.wrap');
   const d = document.createElement('div');
   d.className = 'recon';
-  d.style.cssText = 'border-color:#b91c1c;color:#fecaca;background:#2a0f0f';
+  d.style.cssText = 'border-color:#F7D2CE;color:#1C1C1E;background:#FFEBE9';
   d.innerHTML = `<b>Không nạp được dữ liệu.</b> ${esc(err.message || err)}<br>` +
     `Nguồn dữ liệu: <code>${DATA_BASE}index.json</code>. Trang chỉ hiển thị được khi file này truy cập được.`;
   w.insertBefore(d, w.children[1]);
