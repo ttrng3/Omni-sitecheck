@@ -17,14 +17,14 @@
   --line:#E5E5EA; --line-soft:#EFEFF2; --rule:#E5E5EA;
   --ink:#1C1C1E; --ink-soft:#3C3C43; --muted:#8E8E93;
 
-  --blue:#007AFF; --blue-bg:#E8F1FE; --blue-ink:#0060DF; --blue-line:#CFE3FD;
-  --green:#34C759; --green-bg:#E6F7EB; --green-ink:#1E7F3C;
-  --amber:#FF9500; --amber-bg:#FFF4E5; --amber-ink:#8A5200; --amber-line:#F6DFBC;
-  --red:#FF3B30; --red-bg:#FFEBE9; --red-ink:#C4271D; --red-line:#F7D2CE;
+  --blue:#007AFF; --blue-bg:#E0EFFF; --blue-ink:#0040DD; --blue-line:#CCE4FF;
+  --green:#34C759; --green-bg:#E7F8EB; --green-ink:#1E7F3C;
+  --amber:#FF9500; --amber-bg:#FFF2E0; --amber-ink:#8A5200; --amber-line:#FFEACC;
+  --red:#FF3B30; --red-bg:#FFE7E6; --red-ink:#D70015; --red-line:#FFD8D6;
 
   /* Names the rest of the sheet still uses. */
-  --accent:#007AFF; --accent-bg:#E8F1FE; --accent-2:#5856D6;
-  --critical:#C4271D; --warning:#8A5200;
+  --accent:#007AFF; --accent-bg:#E0EFFF; --accent-2:#5856D6;
+  --critical:#D70015; --warning:#8A5200;
 
   --r-card:12px; --r-inner:8px; --r-pill:12px;
   --sans:-apple-system,BlinkMacSystemFont,"San Francisco","Helvetica Neue",Helvetica,Ubuntu,Roboto,sans-serif;
@@ -160,7 +160,7 @@ summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-ra
   --shadow-card:0 1px 2px rgba(0,0,0,.04),0 2px 8px rgba(0,0,0,.04);
   --shadow-float:0 1px 3px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.06);
   /* values that were raw hex in CSS / Chart.js */
-  --seg-track:#E9E9EB; --seg-active:#FFFFFF;
+  --seg-track:#EFEFF0; --seg-active:#FFFFFF;
   --chart-grid:#EFEFF2; --chart-sep:#FFFFFF; --chart-text:#8E8E93;
 }
 body{background:var(--bg);color:var(--ink-soft)}
@@ -180,7 +180,7 @@ body{font-optical-sizing:auto;text-rendering:optimizeLegibility}
 
 /* Accessibility — the three independent signals */
 @media (prefers-reduced-transparency:reduce){*{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
-  :root{--seg-track:#E9E9EB}}
+  :root{--seg-track:#EFEFF0}}
 @media (prefers-contrast:more){:root{--line:#8E8E93;--line-soft:#C7C7CC;--muted:#3C3C43;--chart-text:#3C3C43}}
 @media (prefers-reduced-motion:reduce){.view-toggle button:active,summary:active{transform:none}}
 
