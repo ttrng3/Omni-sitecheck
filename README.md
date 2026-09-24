@@ -72,24 +72,32 @@ use them to record source discrepancies rather than silently smoothing them.
 
 ## Visual standard
 
-Since 2026-09-23 the renderer follows the **Ty Artifact Standard** — the house
-Apple-HIG treatment that governs every page Ty builds, not just this one. The
-skill `ty-artifact-standard` holds the full rules, and is the only place they
-live. It replaced the warm-paper / Playfair treatment.
+Since 2026-09-24 the renderer follows the **apple-design** skill (it replaced
+the retired `ty-artifact-standard`). The page is **light and dark**, not
+light-only: a base sheet carries the Apple-HIG light tokens, and a second
+`<style id="apple-layer">` block after it adds dark mode, materials, press
+feedback and the accessibility media queries. The layer only overrides.
 
-- Page ground `#F2F2F7`, cards `#FFFFFF` at 12 px radius, hairlines
-  `1px solid #E5E5EA`, no drop shadows.
+- Light: ground `#F2F2F7`, cards `#FFFFFF` at 12 px radius, hairlines
+  `#E5E5EA`. Dark: ground `#000`, cards `#1C1C1E`, hairlines `#38383A`,
+  iOS dark accents (`#0A84FF` / `#30D158` / `#FF9F0A` / `#FF453A`).
+- Dark mode is **screen-only**. Print always gets the light sheet, and the
+  charts are repainted light on `beforeprint` (the page pins
+  `data-theme="light"` for the duration of the print).
+- **No raw hex on screen outside the token blocks.** Chart.js reads every
+  colour from CSS tokens at runtime (`tok()` / `themeCharts()` in the page
+  script) and repaints when the OS scheme flips. Add a colour as a token with
+  both a light and a dark value, never inline.
 - System font stack only. **Do not add a webfont link back.**
-- Ink in three tiers: `#1C1C1E` primary, `#3C3C43` body, `#8E8E93` muted.
-- Semantic accents: blue `#007AFF` active/info, green `#34C759` done, amber
-  `#FF9500` outstanding, red `#FF3B30` critical. Pill text uses a darkened ink
-  of the same hue on a tint, because the raw hexes fail contrast at 12 px.
+- Semantic accents: blue active/info, green done, amber outstanding, red
+  critical. Pill text uses the `*-ink` token of the same hue on a tint.
 - **A status pill carries a dot and a word.** Identity pills (site, department)
   carry no dot, so a dot always means "this is a state".
 - Chart.js: `c_LA_done` green, `c_LA_open` amber, `c_VN_done` blue,
-  `c_VN_open` red, with `borderWidth: 2` and a white `borderColor` between
-  stacked segments. That border is the second cue green and amber need under
-  protanopia — **do not set it back to 0.**
+  `c_VN_open` red, with `borderWidth: 2` and a `--chart-sep` border (white in
+  light, card colour in dark) between stacked segments. That border is the
+  second cue green and amber need under protanopia — **do not set it back to 0.**
+- Force a theme for testing with `<html data-theme="light|dark">`.
 - The `@media print` block and the `beforeprint` hook that expands every
   `<details>` are load-bearing; this page gets photocopied.
 
