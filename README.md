@@ -95,15 +95,22 @@ the accessibility media queries. The layer only overrides.
 A refresh writes `data/`, never the stylesheet. If a refresh finds itself
 editing CSS, something has gone wrong — stop and ask.
 
-## One surface, on purpose
+## One address, one preview
 
-    schedule → cloud routine → source → GitHub → Pages
+    schedule → cloud routine → source → GitHub → Pages (the address) → artifact (Cowork preview)
 
-**GitHub Pages is the only published surface.** Ty ruled on 2026-09-23 that he
-wants control over what exists of his work, so there is no claude.ai artifact
-copy of this dashboard: the Pages URL above is the address, full stop.
+**https://ttrng3.github.io/Omni-sitecheck/ is the only link.** A claude.ai artifact exists as the Cowork preview
+of this page, and the routine refreshes it as its last step, only after the
+repo is correct. Its URL is never written here, in a Drive doc, or in a run
+report: Ty ruled on 2026-09-24 and again on 2026-09-26 that content with a
+Pages address gets no second link. The routine prompt is the only place it
+lives. The preview must exist: "no artifact link" means the URL stays out of
+sight, never that the artifact goes.
 
-A mirror artifact existed for a few hours that day and was deleted. Do not
-recreate one, and do not add an artifact URL to this repo. `tools/build-fragment.py`
-is kept only because it is the one thing that can derive a standalone fragment
-of this page if it is ever needed; nothing in the refresh calls it.
+**This replaces the 2026-09-23 rule** that stood here ("there is no claude.ai
+artifact copy … do not recreate one"). That text is withdrawn, not a conflict
+to weigh: the routine prompt says this repo's files win, and on 2026-09-27 the
+TMDV routine read the same old text and skipped its mirror step.
+
+`tools/build-fragment.py` derives the fragment the preview needs from
+`index.html`; the routine uses it only when the renderer itself changes.
