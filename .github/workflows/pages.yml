@@ -8,7 +8,8 @@
 #                    published or ! line, or the run fails "UNCOVERED"
 #
 # Dry run: unless the Pages setting reads build_type == workflow, nothing is
-# deployed. A failed read also means dry run. Never deploy while unsure.
+# deployed. A failed read never deploys either, and it turns the run RED
+# (couldn't tell), while a read of 'legacy' is a green dry run.
 # Fails closed: a missing path, an empty glob or an escaping path stops the
 # deploy, and the live site stays as it was.
 name: Pages (allowlist)
@@ -36,6 +37,7 @@ jobs:
     outputs:
       mode: ${{ steps.mode.outputs.mode }}
       uncovered: ${{ steps.coverage.outputs.uncovered }}
+      readfail: ${{ steps.mode.outputs.readfail }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -48,11 +50,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          bt="$(curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-                "https://api.github.com/repos/${{ github.repository }}/pages" 2>/dev/null \
-                | python3 -c 'import json,sys; print(json.load(sys.stdin).get("build_type",""))' 2>/dev/null || true)"
+          if resp="$(curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${{ github.repository }}/pages" 2>/dev/null)" \
+             && bt="$(printf '%s' "$resp" | python3 -c 'import json,sys; print(json.load(sys.stdin)["build_type"])' 2>/dev/null)" \
+             && [ -n "$bt" ]; then
+            echo "readfail=no" >> "$GITHUB_OUTPUT"
+          else
+            bt=""; echo "readfail=yes" >> "$GITHUB_OUTPUT"
+          fi
           if [ "$bt" = "workflow" ]; then echo "mode=live" >> "$GITHUB_OUTPUT"; echo "Mode: LIVE (build_type=workflow)"
-          else echo "mode=dry" >> "$GITHUB_OUTPUT"; echo "Mode: DRY RUN (build_type='${bt:-unreadable}'), nothing will be deployed"; fi
+          elif [ -z "$bt" ]; then echo "mode=dry" >> "$GITHUB_OUTPUT"; echo "::error::Pages setting UNREADABLE: not deploying, and this run will be red (couldn't tell, so didn't try)"
+          else echo "mode=dry" >> "$GITHUB_OUTPUT"; echo "Mode: DRY RUN (build_type=$bt), nothing will be deployed"; fi
 
       - name: Stage allowlisted files
         shell: bash
@@ -152,8 +160,9 @@ jobs:
       - name: Result
         shell: bash
         run: |
-          echo "build: ${{ needs.build.result }} | mode: ${{ needs.build.outputs.mode }} | deploy: ${{ needs.deploy.result }} | uncovered: ${{ needs.build.outputs.uncovered }}"
+          echo "build: ${{ needs.build.result }} | mode: ${{ needs.build.outputs.mode }} | deploy: ${{ needs.deploy.result }} | uncovered: ${{ needs.build.outputs.uncovered }} | pages-read-failed: ${{ needs.build.outputs.readfail }}"
           [ "${{ needs.build.result }}" = "success" ] || { echo "::error::build failed (allowlist or staging)"; exit 1; }
+          [ "${{ needs.build.outputs.readfail }}" = "yes" ] && { echo "::error::Pages setting was unreadable, so nothing was deployed. Red means couldn't tell; check the Pages settings and the workflow token."; exit 1; }
           if [ "${{ needs.build.outputs.mode }}" = "live" ] && [ "${{ needs.deploy.result }}" != "success" ]; then echo "::error::live mode but deploy did not succeed"; exit 1; fi
           if [ "${{ needs.build.outputs.uncovered }}" = "yes" ]; then
             echo "::error::A routine wrote a file the allowlist doesn't account for. Add it to .pages-allow (published) or as a ! line (not published)."
