@@ -23,6 +23,20 @@ Anywhere with the Microsoft 365 connector and the GitHub MCP file tools. Both
 are account-level, not machine-level, so this runs in a cloud routine with the
 lid shut. No step requires the Mac, and no step requires a token.
 
+## The Artifact tool is attached: call it directly
+
+The routine prompt says to call ToolSearch for any tool that isn't in the
+immediate tool list "before concluding it is unavailable". **For the Artifact
+tool that is wrong, and this file overrides it.** The Artifact tool is
+attached to this routine: it's in the routine's allowed tools. An attached tool
+never shows up in ToolSearch, which finds only deferred tools, so a ToolSearch
+miss is exactly what an attached tool looks like. It is not evidence that the
+tool is absent. Call it directly for the mirror step. Only an error returned by
+the tool itself means it is unavailable, and then the mirror step reports that
+error and stops, as the prompt says. (2026-09-27: the TMDV routine searched,
+missed, reported "no Artifact tool" and skipped its mirror. The routines whose
+prompts say "call it directly" keep their previews in sync.)
+
 ## Steps
 
 ### 1. Find the newest source file
