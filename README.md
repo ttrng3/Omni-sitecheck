@@ -33,6 +33,10 @@ data and every surface is current on next load.
 | `data/index.json` | Manifest: `generated`, `currentWeek`, `history[]` (per-week totals), `detail{}` (week → slug). |
 | `data/weeks/<YYYY-MM-Wn>.json` | One week's row-level tasks: `{site, area, issue, dept, action, status}`. |
 | `.github/workflows/freshness-check.yml` | Opens an issue if the data stops being refreshed. |
+| `.pages-allow` | What Pages publishes. Only the paths listed there are served. |
+| `.github/workflows/pages.yml` | Deploys the allowlisted files; fails "UNCOVERED" if the routine writes a file under `data/` that no `.pages-allow` line covers. |
+
+Pages runs from GitHub Actions (since 2026-09-29), so `README.md`, `tools/` and anything else not in `.pages-allow` is never served. A new kind of file under `data/` needs a `.pages-allow` line in the same commit, or the Pages run fails and the live site stays as it was.
 
 ## Why data is split per week
 
@@ -57,6 +61,7 @@ from anywhere.
    `{site: "Long An"|"Vinh", area, issue, dept, action, status}`.
 3. In `data/index.json`: append the week to `history`, add it to `detail`,
    set `currentWeek`, and set `generated` to now (UTC, `%Y-%m-%dT%H:%M:%SZ`).
+4. Write only paths `.pages-allow` already covers (`data/index.json`, `data/weeks/*.json`); anything else under `data/` fails the Pages run as "UNCOVERED".
 
 `history` entries carry `laR`/`vnR` (raised) and `laO`/`vnO` (open) plus `src`,
 `srcUrl`, `verified`, and an optional `note` — notes surface on the page, so

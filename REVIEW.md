@@ -40,7 +40,7 @@ When unsure between two levels, pick the higher one and say why.
 Rules specific to Omni-sitecheck. **Every standing ruling in the README (visual standard, one address one preview, the data layout) applies as well; a PR that breaks one is High.** The lines below are the ones most often at risk.
 
 - **The README is what the routine follows.** The routine prompt says this repo's files win over anything else. A change to what the routine does ("Adding a week", sources, files written, checks) must change the README in the same PR; a README that disagrees with the diff is High.
-- **The renderer holds no data.** `index.html` fetches `data/` at load. A number, a row or a week typed into `index.html` is High: the old 300 KB self-contained page is why the site once sat two weeks behind.
+- **The renderer holds no data.** `index.html` fetches `data/` at load. A number, a row or a week typed into `index.html` is High: the old 300 KB self-contained page is why the site once sat two weeks behind (README, "Why data is split per week").
 - **A refresh writes `data/` only.** A change to either `<style>` block in `index.html` (the base sheet or `apple-layer`) needs its own PR and Ty's say-so; mixed into a data change it is High.
 - **`data/index.json` shape.** A new week is appended to `history[]` (never an old entry rewritten), added to `detail{}` with a file that exists, and `generated` is UTC in `%Y-%m-%dT%H:%M:%SZ`. Breaking any of the three is High.
 - **Discrepancies are recorded, not smoothed.** When detail rows disagree with the `TH` summary, the real rows are used and the difference goes in that week's `note`. A diff that adjusts counts to match without a note is High.
