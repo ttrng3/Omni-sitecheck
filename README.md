@@ -32,8 +32,9 @@ data and every surface is current on next load.
 | `index.html` | Renderer only (~36 KB). Charts, tables, filters. No data. |
 | `data/index.json` | Manifest: `generated`, `currentWeek`, `history[]` (per-week totals), `detail{}` (week → slug). |
 | `data/weeks/<YYYY-MM-Wn>.json` | One week's row-level tasks: `{site, area, issue, dept, action, status}`. |
+| `data/.last-check` | Heartbeat the routine writes every run. Covered by `.pages-allow` but never published. |
 | `.github/workflows/freshness-check.yml` | Opens an issue if the data stops being refreshed. |
-| `.pages-allow` | What Pages publishes. Only the paths listed there are served. |
+| `.pages-allow` | What Pages publishes. Only its plain path and glob lines are served; `!` lines are known but not published, and `@` lines mark watched areas. |
 | `.github/workflows/pages.yml` | Deploys the allowlisted files; fails "UNCOVERED" if the routine writes a file under `data/` that no `.pages-allow` line covers. |
 
 Pages runs from GitHub Actions (since 2026-09-29), so `README.md`, `tools/` and anything else not in `.pages-allow` is never served. A new kind of file under `data/` needs Ty's say-so and a `.pages-allow` line in its own PR; a refresh never edits `.pages-allow`. Until then the Pages run fails "UNCOVERED" and the live site stays as it was.

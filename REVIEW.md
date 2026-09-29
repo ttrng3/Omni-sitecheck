@@ -47,5 +47,5 @@ Rules specific to Omni-sitecheck. **Every standing ruling in the README (visual 
 - **Light only, ruled 2026-09-24 by Ty.** No dark theme, no webfont link, no raw hex on screen outside the token blocks. A status pill has a dot and a word; identity pills (site, department) have no dot. Stacked chart segments keep `borderWidth: 2` with the `--chart-sep` border; setting it to 0 is High.
 - **Print is load-bearing.** The `@media print` block and the `beforeprint` hook that expands every `<details>` must survive every renderer change; the page gets photocopied.
 - **One address, one preview.** `https://ttrng3.github.io/Omni-sitecheck/` is the only link. A Cowork preview URL or artifact id anywhere in the repo is Critical (the repo is public).
-- **Don't widen what is published.** A new path in `.pages-allow`, or a new kind of data in `data/`, is High and needs Ty.
+- **Don't widen what is published.** A new path in `.pages-allow`, or a new kind of data in `data/`, is at least High and needs Ty; Critical if it serves something that shouldn't be.
 - **Entity separation.** This is an OMNI repo. Any ECOPM data (a person's or a client's name, a number, or a file from the ECOPM side) is **Critical**. The entity label itself isn't.
