@@ -7,6 +7,8 @@
 # tracked symlink in a watched area, is refused.
 # The workflow deploys only once Pages is set to GitHub Actions; until then
 # every run is a dry run that stages and checks but publishes nothing.
+# Only simple [ ] sets ([abc], [!x], [^x]) are allowed, and no wildcard on an @
+# line; pages.yml's header lists everything that stops a deploy.
 index.html
 data/index.json
 data/weeks/*.json
