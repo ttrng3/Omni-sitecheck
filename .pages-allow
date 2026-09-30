@@ -5,8 +5,8 @@
 # watched area: every tracked file under it must match a line above, or the
 # Pages run fails "UNCOVERED". A symlink anywhere in a listed path, or a
 # tracked symlink in a watched area, is refused.
-# Pages runs from GitHub Actions (switched 2026-09-29), so every green run
-# deploys. A run is a dry run only if that setting is changed back.
+# Pages runs from GitHub Actions (switched 2026-09-29): a run that stages
+# deploys the allowlisted files, even when coverage then turns it red.
 # Only simple [ ] sets ([abc], [!x], [^x]) are allowed, and no wildcard on an @
 # line; pages.yml's header lists everything that stops a deploy.
 index.html
