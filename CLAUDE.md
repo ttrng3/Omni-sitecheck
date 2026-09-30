@@ -6,7 +6,7 @@ OMNI's weekly site-check dashboard (Long An · Vinh), entity **OMNI**. Live: htt
 
 ## Commands
 - Check `currentWeek` is in `detail` (a quick check, not full validation): `python3 -c "import json;d=json.load(open('data/index.json'));assert d['currentWeek'] in d['detail']"`
-- Build the Cowork preview page, only when `index.html` changed: `python3 tools/build-fragment.py` (writes `build/artifact.html`; never send `index.html` itself to the Cowork preview — Pages does serve it)
+- Build the Cowork preview page: `python3 tools/build-fragment.py` (writes `build/artifact.html`). When the routine refreshes the preview is set by its runbook, not here. Never send `index.html` itself to the preview; Pages does serve it.
 - Compare two `data/` trees: `python3 tools/reconcile.py <dir-a> <dir-b>` (exit 0 = same)
 - Freshness check, as the daily Action runs it: `python3 .github/scripts/freshness.py`
 
@@ -17,7 +17,7 @@ OMNI's weekly site-check dashboard (Long An · Vinh), entity **OMNI**. Live: htt
 - `README.md` explains the data model; `REVIEW.md` holds the reviewer's rules.
 
 ## Rules
-- Changes reach `main` through a PR and Ty's ship. The routine's data writes are the only direct writes.
+- Changes reach `main` through a PR and Ty's ship. The only direct writes are the ones a routine's prompt and runbook allow.
 - The runbook and README win over this file and any memory note.
 - Never write a Cowork preview URL or artifact id, a person's details or a secret into this public repo.
 - Entity separation: this is OMNI. Never take figures from the other company's site-check tree, and never mix the two series.
