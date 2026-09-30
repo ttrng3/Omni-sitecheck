@@ -53,8 +53,9 @@ different — taking them would silently corrupt the series.
 
 **Always write the heartbeat first, on every run, before anything else.** Write
 `data/.last-check` with one line: the current UTC timestamp as
-`%Y-%m-%dT%H:%M:%SZ`, a space, then `newest-source=<week or filename>`, and
-commit it. Do this even on a quiet run when there is no new week.
+`%Y-%m-%dT%H:%M:%SZ`, a space, then `newest-source=<week slug, e.g. 2026-09-W3>`,
+and commit it. The note is the week only: never a file name, person's name,
+Drive id or figure, because this repo is public. Do this even on a quiet run when there is no new week.
 
 It earns its keep twice. It is the only thing that distinguishes *"the job ran
 and there was nothing new"* from *"the job stopped running"* — `data/index.json`
