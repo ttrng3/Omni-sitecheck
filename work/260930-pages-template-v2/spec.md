@@ -3,7 +3,7 @@
 Status: approved by Ty 30/09. Full spec: claude-config `work/260929-pages-template-fixes/spec.md`, with the defect fixes in `work/260930-pages-symlink-dir/` and `work/260930-pages-glob-spaces/`, pinned to claude-config 3f62fe2 (24/24 Linux tests in CI).
 
 ## Change
-`.github/workflows/pages.yml` becomes the template at 3f62fe2 minus the optional placeholder comment. `.pages-allow` changes only its header comment, to describe the new rules. README's `pages.yml` row states the whole-tree rule.
+`.github/workflows/pages.yml` becomes the template at 3f62fe2 minus the optional placeholder comment. `.pages-allow` changes only its header comment, to describe the new rules. README's `pages.yml` row states the whole-tree rule. README's paragraph under the table is corrected: an UNCOVERED run never publishes the unlisted file, but the allowlisted files in that push still deploy (the old text said the site stayed as it was, which the workflow never did).
 
 ## Behaviour changes
 
@@ -12,6 +12,7 @@ Pre-check, 30/09, on this repo's main before the branch: `git ls-files -s -z` (e
 - Coverage reads every tracked file in a watched area, not the last diff; `fetch-depth: 50` is dropped.
 - A `*` never matches a leading dot; a line containing `*`, `?` or `[` is a glob; a glob line is never split on spaces.
 - Trimming uses parameter expansion (quotes taken literally).
+- Watch entries are paths: `@data/` or `@data` watches `data` and everything under `data/`, never `database/`; `@file` watches exactly that file; a bare `@` watches the whole tree. This repo's watch lines cover the same files as before.
 - A symlink anywhere in a listed path, a path resolving outside the repo, or a path not written plainly stops the deploy; a tracked symlink in a watched area turns the run red.
 - Permissions: workflow `contents: read`; build `contents: read` + `pages: read`; deploy `pages: write` + `id-token: write`. Proven live on Omni-TMDV 30/09.
 
