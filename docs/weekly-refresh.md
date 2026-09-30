@@ -56,9 +56,10 @@ different — taking them would silently corrupt the series.
 `%Y-%m-%dT%H:%M:%SZ`, a space, then `newest-source=<week slug>`, and commit
 it. Do this even on a quiet run when there is no new week. The slug is the
 newest file's `YYYY-MM-Wnn` with the leading zero dropped (`2026-09-W3`, as in
-step 4); if no OMNI file is found, write `newest-source=none`. The note is the
-week only: never a file name, person's name, Drive id or figure, because this
-repo is public.
+step 4); if no OMNI file is found, write `newest-source=none`, commit just the
+heartbeat, report that no OMNI source file was found, and stop. The note is the
+week only: never a file name, person's name, SharePoint URL, `uri`, item id or
+figure, because this repo is public.
 
 It earns its keep twice. It is the only thing that distinguishes *"the job ran
 and there was nothing new"* from *"the job stopped running"* — `data/index.json`
