@@ -1,6 +1,6 @@
 {
- "generated": "2026-09-22T04:44:21Z",
- "currentWeek": "Sep W3 ’26",
+ "generated": "2026-09-30T08:44:38Z",
+ "currentWeek": "Sep W4 ’26",
  "detail": {
   "Nov W4 ’25": "2025-11-W4",
   "Dec W1 ’25": "2025-12-W1",
@@ -40,7 +40,8 @@
   "Aug W4 ’26": "2026-08-W4",
   "Sep W1 ’26": "2026-09-W1",
   "Sep W2 ’26": "2026-09-W2",
-  "Sep W3 ’26": "2026-09-W3"
+  "Sep W3 ’26": "2026-09-W3",
+  "Sep W4 ’26": "2026-09-W4"
  },
  "history": [
   {
@@ -453,6 +454,17 @@
    "vnO": 1,
    "verified": true,
    "note": "TH 21/09: LA nêu 54 / tồn 32, Vinh nêu 44 / tồn 1, tổng 98 / tồn 33 (✓ĐC khớp SUM). Chi tiết Long An 53 dòng (vs TH 54, lệch 1 dòng) — chỉ 10 đầu việc “Đang xử lý” + 2 “Xử lý sau thi công” = 12 chưa xong trong tuần, nên 32 tồn của TH gồm ~20 tồn luỹ kế từ các tuần trước, KHÔNG liệt kê trong sheet tuần này. Chi tiết Vinh 48 dòng (vs TH 44) — 4 dòng cuối đánh số lặp trong file nguồn. Vinh 1 tồn — lần đầu khác 0 sau chuỗi 13 tuần. Đã quá hạn 15/09."
+  },
+  {
+   "week": "Sep W4 ’26",
+   "src": "2026-09-W04_Sitecheck.xlsx",
+   "srcUrl": "https://omnicomvn-my.sharepoint.com/personal/kienlt_omni_com_vn/Documents/OMNI%20-%20C%C3%81C%20T%C3%80I%20LI%E1%BB%86U/OMNI%20-%20SITECHECK/TH%C3%81NG%209/2026-09-W04_Sitecheck.xlsx",
+   "laR": 44,
+   "vnR": 32,
+   "laO": 27,
+   "vnO": 1,
+   "verified": true,
+   "note": "TH 28/09: LA nêu 44 / tồn 27, Vinh nêu 32 / tồn 1, tổng 76 / tồn 28 (✓ĐC khớp SUM). ✓ĐC lần đầu sau 3 tuần chi tiết khớp TH tuyệt đối: Long An 44 dòng = 44 TH, trong đó đúng 27 dòng “Đang xử lý” = 27 tồn; Vinh 32 dòng = 32 TH. ⚠ Vinh: TH ghi 1 tồn nhưng cả 32 dòng chi tiết đều “Hoàn thành”. Dấu vết duy nhất là dòng 7 (The Garden – “Xe Cư Dân Đậu Sai Quy Định”, BP An ninh) có ô Phương án ghi “Chưa Hoàn Thành” trong khi ô Tình trạng ghi “Hoàn thành” — cần kienlt xác nhận đây có đúng là 1 tồn đó không. ⚠ Long An: 5 dòng đầu (BP AN) bị đảo cột Phương án ↔ Tình trạng trong file nguồn; đã gán về đúng trường, giữ nguyên chữ, không sửa nội dung. 27 tồn dồn vào 2 bộ phận: KT 12 dòng dùng chung một lý do “Trời mưa liên tục nên BP chưa xử lý được, hạn đầu tuần sau xử lý”; CSCD-TI 15 dòng, trong đó 10 dòng nấm mốc ghế/chân KVC lặp gần như y hệt."
   }
  ]
 }
