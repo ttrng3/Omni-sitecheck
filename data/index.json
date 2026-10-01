@@ -363,7 +363,7 @@
    "laO": 6,
    "vnO": 0,
    "verified": true,
-   "note": "Corrected 26 Aug 2026. At first read the W02 file had only 2 sheets and a blank Vinh column; kienlt added the Vinh (ECO CENTRAL PARK) tab afterwards. Vinh = 30 raised / 0 open."
+   "note": "Corrected 26 Aug 2026. At first read the W02 file had only 2 sheets and a blank Vinh column; the file owner added the Vinh (ECO CENTRAL PARK) tab afterwards. Vinh = 30 raised / 0 open."
   },
   {
    "week": "Aug W3 ’26",
@@ -373,7 +373,7 @@
    "laO": 1,
    "vnO": 0,
    "verified": true,
-   "note": "⚠ Vinh detail tab in the W03 file is byte-identical to the W02 tab (same 30 rows, same order). TH reports 30 for both weeks. Long An rows are genuinely new. Vinh W03 needs confirmation from kienlt — possible un-updated copy-paste of the W02 tab."
+   "note": "⚠ Vinh detail tab in the W03 file is byte-identical to the W02 tab (same 30 rows, same order). TH reports 30 for both weeks. Long An rows are genuinely new. Vinh W03 needs confirmation from the file owner — possible un-updated copy-paste of the W02 tab."
   },
   {
    "week": "Aug W4 ’26",
@@ -423,7 +423,7 @@
    "laO": 27,
    "vnO": 1,
    "verified": true,
-   "note": "TH 28/09: LA nêu 44 / tồn 27, Vinh nêu 32 / tồn 1, tổng 76 / tồn 28 (✓ĐC khớp SUM). ✓ĐC lần đầu sau 3 tuần chi tiết khớp TH tuyệt đối: Long An 44 dòng = 44 TH, trong đó đúng 27 dòng “Đang xử lý” = 27 tồn; Vinh 32 dòng = 32 TH. ⚠ Vinh: TH ghi 1 tồn nhưng cả 32 dòng chi tiết đều “Hoàn thành”. Dấu vết duy nhất là dòng 7 (The Garden – “Xe Cư Dân Đậu Sai Quy Định”, BP An ninh) có ô Phương án ghi “Chưa Hoàn Thành” trong khi ô Tình trạng ghi “Hoàn thành” — cần kienlt xác nhận đây có đúng là 1 tồn đó không. ⚠ Long An: 5 dòng đầu (BP AN) bị đảo cột Phương án ↔ Tình trạng trong file nguồn; đã gán về đúng trường, giữ nguyên chữ, không sửa nội dung. 27 tồn dồn vào 2 bộ phận: KT 12 dòng dùng chung một lý do “Trời mưa liên tục nên BP chưa xử lý được, hạn đầu tuần sau xử lý”; CSCD-TI 15 dòng, trong đó 10 dòng nấm mốc ghế/chân KVC lặp gần như y hệt."
+   "note": "TH 28/09: LA nêu 44 / tồn 27, Vinh nêu 32 / tồn 1, tổng 76 / tồn 28 (✓ĐC khớp SUM). ✓ĐC lần đầu sau 3 tuần chi tiết khớp TH tuyệt đối: Long An 44 dòng = 44 TH, trong đó đúng 27 dòng “Đang xử lý” = 27 tồn; Vinh 32 dòng = 32 TH. ⚠ Vinh: TH ghi 1 tồn nhưng cả 32 dòng chi tiết đều “Hoàn thành”. Dấu vết duy nhất là dòng 7 (The Garden – “Xe Cư Dân Đậu Sai Quy Định”, BP An ninh) có ô Phương án ghi “Chưa Hoàn Thành” trong khi ô Tình trạng ghi “Hoàn thành” — cần người phụ trách file xác nhận đây có đúng là 1 tồn đó không. ⚠ Long An: 5 dòng đầu (BP AN) bị đảo cột Phương án ↔ Tình trạng trong file nguồn; đã gán về đúng trường, giữ nguyên chữ, không sửa nội dung. 27 tồn dồn vào 2 bộ phận: KT 12 dòng dùng chung một lý do “Trời mưa liên tục nên BP chưa xử lý được, hạn đầu tuần sau xử lý”; CSCD-TI 15 dòng, trong đó 10 dòng nấm mốc ghế/chân KVC lặp gần như y hệt."
   }
  ]
 }

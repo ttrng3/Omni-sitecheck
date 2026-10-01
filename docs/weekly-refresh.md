@@ -110,6 +110,7 @@ History entry shape:
 
 Never write a `srcUrl` or any other link to the source file: every such link
 carries one person's storage path, and this repo is public. `src` (the file name) is enough.
+Notes name no person either: write "the file owner" or the site, never an account name.
 
 `week` uses a curly apostrophe (`’26`), and the slug for `Sep W3 ’26` is
 `2026-09-W3`. Both matter — the manifest maps one to the other.
