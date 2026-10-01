@@ -1,6 +1,6 @@
-# Spec (awaiting Ty)
+# Spec
 
-Status: awaits Ty's "approve" with the intent.
+Status: approved by Ty 01/10 ("approve 10", in chat). Git history: no ruling yet; nothing is rewritten unless Ty asks.
 
 - `data/index.json`: drop the `srcUrl` key from all 41 `history` entries. Nothing else changes.
 - `index.html`: the source cell shows the file name as escaped plain text (`esc(w.src)`); the stylesheet is not touched (the left-over link style matches nothing; a style change does not ride with a data change); the table subtitle no longer says to click "View source".
