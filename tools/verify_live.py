@@ -4,9 +4,9 @@
 Run from an up-to-date checkout of main:
   git pull --ff-only && python3 tools/verify_live.py --forbid WORD [WORD ...]
 
---forbid takes words that must not appear in anything served (the other entity's name).
-The runner supplies them; they are never written into this public repo. Without them the
-entity check fails rather than passing unchecked.
+--forbid takes words that must not appear in anything served (the other entity's name or label).
+The runner supplies them so the list can change without a PR; the docs may name the entity's label,
+which REVIEW.md allows. Without them the entity check fails rather than passing unchecked.
 
 Prints one JSON object of verdicts and exits 0 only when every verdict is true.
 Matches of personal traces are reported by count and file, never by value.
@@ -18,11 +18,11 @@ LIVE = "https://ttrng3.github.io/Omni-sitecheck/"
 # Tracked but never served (.pages-allow); each must exist on main and answer 404 live.
 PRIVATE = ["README.md", "CLAUDE.md", "REVIEW.md", "docs/weekly-refresh.md", "data/.last-check",
            "tools/build-fragment.py", "tools/reconcile.py", "tools/verify_live.py",
-           "verification/weekly-page.md", "work/261001-weekly-page-protocol/intent.md",
+           "verification/weekly-page.md",
            ".github/scripts/freshness.py", ".pages-allow"]
 TRACES = re.compile(r"/personal/|sharepoint\.com|1drv\.ms|[\w.+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}", re.I)
 HEARTBEAT_MAX = 9  # the watchdog pipeline-wiring's collect_status.py sets for this pipeline
-DATA_MAX = 24      # MAX_DATA_AGE_DAYS default in .github/scripts/freshness.py
+DATA_MAX = 24      # MAX_DATA_AGE_DAYS default in .github/scripts/freshness.py (its run clock, RUN_MAX, is 10)
 MONTHS = {m: i + 1 for i, m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split())}
 # Weeks whose detail rows differ from the summary sheet with no note, found 01/10/2026 when this
 # protocol was written. The source files are not reachable from here, so they are listed, not fixed.
@@ -61,7 +61,7 @@ def slug(label):
     try:
         mon, w, yy = label.split()
         return f"20{yy[-2:]}-{MONTHS[mon]:02d}-{w}" if re.fullmatch(r"W\d", w) and yy.startswith("’") else None
-    except (ValueError, KeyError):
+    except (ValueError, KeyError, AttributeError):
         return None
 
 
@@ -88,8 +88,10 @@ def main():
     for p in served:
         del info[p]
 
-    info["private_status"] = {p: get(p)[0] for p in PRIVATE}
-    info["private_missing_on_main"] = [p for p in PRIVATE if not (ROOT / p).exists()]
+    work = sorted(glob.glob(str(ROOT / "work/*/intent.md")))[:1]  # any one work file, found at run time
+    private = PRIVATE + [str(pathlib.Path(w).relative_to(ROOT)) for w in work]
+    info["private_status"] = {p: get(p)[0] for p in private}
+    info["private_missing_on_main"] = [p for p in private if not (ROOT / p).exists()] + ([] if work else ["work/*/intent.md"])
     v["private_not_served"] = all(s == 404 for s in info["private_status"].values()) and not info["private_missing_on_main"]
 
     labels = [h.get("week") for h in hist]
@@ -99,20 +101,22 @@ def main():
     v["current_week_is_newest"] = bool(labels) and d.get("currentWeek") == labels[-1] and d.get("currentWeek") in detail
     v["detail_slugs_match"] = all(detail[l] == slug(l) for l in detail) and set(detail) <= set(labels)
     v["detail_files_match"] = sorted(detail.values()) == files
-    v["open_within_raised"] = all(0 <= h.get("laO", -1) <= h.get("laR", -1) and 0 <= h.get("vnO", -1) <= h.get("vnR", -1) for h in hist)
+    nums = lambda h, *k: all(isinstance(h.get(x), int) for x in k)
+    v["open_within_raised"] = all(nums(h, "laO", "laR", "vnO", "vnR") and 0 <= h["laO"] <= h["laR"] and 0 <= h["vnO"] <= h["vnR"] for h in hist)
 
     # Rows per site must equal the summary sheet, or the week's note must say why (README: notes record
     # source discrepancies). KNOWN_UNEXPLAINED covers the three older weeks found on 01/10.
     differ = []
     for h in hist:
-        rows = weeks.get(detail.get(h["week"], ""), None)
+        rows = weeks.get(detail.get(h.get("week"), ""), None)
         if rows is None:
             continue
         c = collections.Counter(r.get("site") for r in rows)
         if c.get("Long An", 0) != h.get("laR") or c.get("Vinh", 0) != h.get("vnR"):
-            differ.append(h["week"])
+            differ.append(h.get("week"))
+    # The note must speak about the rows ("dòng"), as the notes that explain a difference do (Sep W3 ’26).
     unexplained = [w for w in differ if w not in KNOWN_UNEXPLAINED and
-                   not norm(next(h for h in hist if h["week"] == w).get("note"))]
+                   norm("dòng") not in norm(next(h for h in hist if h.get("week") == w).get("note"))]
     v["row_counts_explained"] = not unexplained
     info["weeks"] = {"count": len(hist), "newest": labels[-1] if labels else None,
                      "without_detail": [l for l in labels if l not in detail], "rows": sum(len(r) for r in weeks.values()),
