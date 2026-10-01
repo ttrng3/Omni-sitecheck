@@ -64,9 +64,10 @@ from anywhere.
    set `currentWeek`, and set `generated` to now (UTC, `%Y-%m-%dT%H:%M:%SZ`).
 4. Write only paths `.pages-allow` already covers (`data/index.json`, `data/weeks/*.json`, and the `data/.last-check` heartbeat, which is covered but not published); anything else under `data/` fails the Pages run as "UNCOVERED". Never edit `.pages-allow` in a refresh.
 
-`history` entries carry `laR`/`vnR` (raised) and `laO`/`vnO` (open) plus `src`,
-`srcUrl`, `verified`, and an optional `note` — notes surface on the page, so
+`history` entries carry `laR`/`vnR` (raised) and `laO`/`vnO` (open) plus `src`
+(the file name, shown as plain text), `verified`, and an optional `note` — notes surface on the page, so
 use them to record source discrepancies rather than silently smoothing them.
+No link to the source file: every link to it carries one person's storage path (removed 01/10).
 
 ## Data caveats
 
