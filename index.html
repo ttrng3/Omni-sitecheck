@@ -95,8 +95,7 @@ tbody tr.selected{background:var(--blue-bg) !important}
 tbody tr.selected td:first-child{box-shadow:inset 3px 0 0 var(--blue)}
 .num-table td.n{text-align:right;font-variant-numeric:tabular-nums}
 .num-table td.muted{color:var(--muted);font-style:normal}
-.num-table a.src{color:var(--blue);text-decoration:none;font-size:12px}
-.num-table a.src:hover{text-decoration:underline}
+.num-table td.src{font-size:12px}
 
 /* pills — a status pill carries a dot AND a word, because amber and green sit
    7.1 dE apart under protanopia. Identity pills (site, department) take no dot,
@@ -444,7 +443,7 @@ function renderWeeklyTable() {
     return `
       <tr class="clickable${sel}" data-week="${w.week}" title="${hasDetail ? 'Click to drill into ' + w.week : 'No row-level data for this week'}">
         <td><strong>${w.week}</strong>${hasDetail ? ' <span class="pill done" style="font-size:9px;padding:1px 6px;">detail</span>' : ''}</td>
-        <td><a class="src" href="${w.srcUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">${w.src}</a></td>
+        <td class="src">${esc(w.src)}</td>
         <td class="n">${n(w.laR)}</td>
         <td class="n">${n(w.vnR)}</td>
         <td class="n">${n(w.laO)}</td>
