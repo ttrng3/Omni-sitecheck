@@ -1,9 +1,9 @@
 # Spec
 
-Status: approved by Ty 01/10 ("approve 10", in chat). Git history: no ruling yet; nothing is rewritten unless Ty asks.
+Status: approved by Ty 01/10 ("approve 10", in chat). Git history: left as it is (Ty, 01/10: "leave them as-is").
 
 - `data/index.json`: drop the `srcUrl` key from all 41 `history` entries. Nothing else changes.
 - `index.html`: the source cell shows the file name as escaped plain text (`esc(w.src)`); the stylesheet is not touched (the left-over link style matches nothing; a style change does not ride with a data change); the table subtitle no longer says to click "View source".
 - `README.md` and `docs/weekly-refresh.md`: no `srcUrl` in the entry shape; the runbook says never to write a link to the source file, and why. The routine prompt itself does not mention `srcUrl` (checked 01/10).
-- No person-free link exists: the files sit in one person's own storage. Git history keeps the old links; rewriting it is Ty's call.
+- No person-free link exists: the files sit in one person's own storage. Git history keeps the old links; Ty ruled to leave them (01/10).
 - Promise: no `/personal/` path or storage-host link in any tracked file outside git history; after merge, none in the served page or `data/`; the weekly table renders every row with the file name and no link; no console error.
