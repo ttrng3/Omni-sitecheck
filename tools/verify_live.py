@@ -60,7 +60,7 @@ def slug(label):
     """'Sep W4 ’26' -> '2026-09-W4' (README: the manifest maps one to the other); None if malformed."""
     try:
         mon, w, yy = label.split()
-        return f"20{yy[-2:]}-{MONTHS[mon]:02d}-{w}" if re.fullmatch(r"W\d", w) and yy.startswith("’") else None
+        return f"20{yy[-2:]}-{MONTHS[mon]:02d}-{w}" if re.fullmatch(r"W[1-5]", w) and re.fullmatch(r"’\d\d", yy) else None
     except (ValueError, KeyError, AttributeError):
         return None
 
@@ -97,7 +97,7 @@ def main():
     labels = [h.get("week") for h in hist]
     slugs = [slug(l) for l in labels]
     v["labels_well_formed"] = all(slugs)
-    v["weeks_ordered_unique"] = all(slugs) and slugs == sorted(slugs) and len(set(labels)) == len(labels)
+    v["weeks_ordered_unique"] = all(slugs) and slugs == sorted(slugs) and len(set(labels)) == len(labels) == len(set(slugs))
     v["current_week_is_newest"] = bool(labels) and d.get("currentWeek") == labels[-1] and d.get("currentWeek") in detail
     v["detail_slugs_match"] = all(detail[l] == slug(l) for l in detail) and set(detail) <= set(labels)
     v["detail_files_match"] = sorted(detail.values()) == files
@@ -114,9 +114,9 @@ def main():
         c = collections.Counter(r.get("site") for r in rows)
         if c.get("Long An", 0) != h.get("laR") or c.get("Vinh", 0) != h.get("vnR"):
             differ.append(h.get("week"))
-    # The note must speak about the rows ("dòng"), as the notes that explain a difference do (Sep W3 ’26).
+    # Any note counts: the runbook asks for a note, not for particular words.
     unexplained = [w for w in differ if w not in KNOWN_UNEXPLAINED and
-                   norm("dòng") not in norm(next(h for h in hist if h.get("week") == w).get("note"))]
+                   not norm(next(h for h in hist if h.get("week") == w).get("note")).strip()]
     v["row_counts_explained"] = not unexplained
     info["weeks"] = {"count": len(hist), "newest": labels[-1] if labels else None,
                      "without_detail": [l for l in labels if l not in detail], "rows": sum(len(r) for r in weeks.values()),

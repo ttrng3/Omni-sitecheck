@@ -49,7 +49,7 @@ All of them must be true. `current_rows_render` reads the table as the page firs
 - **The other entity's tree read by mistake** (identical file names, different numbers). `no_forbidden_words` keeps its name off the page. The numbers themselves cannot be told apart by a script: see Not covered.
 - **A label and slug that disagree** (the curly apostrophe, 22/09). `labels_well_formed` and `detail_slugs_match`.
 - **A run that appends a week but not its detail, or claims detail it never wrote.** `detail_files_match`, `current_week_is_newest`.
-- **A source that repeats or recycles rows, or whose summary disagrees with its rows.** `row_counts_explained`: the week's `note` must speak about the rows (contain "dòng"), as Sep W3 ’26's does. Three older weeks (Jan W5, Apr W2, Jul W2 ’26) differ with no note; they are listed in `KNOWN_UNEXPLAINED` in the script because the source files are not reachable from here.
+- **A source that repeats or recycles rows, or whose summary disagrees with its rows.** `row_counts_explained`: the week must carry a `note` (the runbook asks for one, not for particular words). Three older weeks (Jan W5, Apr W2, Jul W2 ’26) differ with no note; they are listed in `KNOWN_UNEXPLAINED` in the script because the source files are not reachable from here.
 - **A routine that stopped running.** `heartbeat_fresh`. **A routine that runs but publishes nothing:** `data_fresh`.
 - **A preview a generation behind.** Step 4.
 
@@ -78,7 +78,7 @@ All of them must be true. `current_rows_render` reads the table as the page firs
 - Pages answers `cache-control: max-age=600` (10 minutes; response header seen with `curl -sI`, 01/10). A `served_equals_main` failure straight after a merge is the cache: wait for the Pages run, then re-run. Each request retries once on a network error or a 5xx.
 - The weekly table opens on "Last 12w"; step 2 clicks "All" before counting.
 - The week file loads after the click. `pick` empties the detail table, clicks, and waits until rows appear (max 8 s), so it never reads the previous week's rows. A week without detail never fills the table, so it waits only 2 s and then reads the table counter ("0 of 0 tasks"); the "No row-level data" chart messages are hidden elements and always in the page source.
-- The browser tool stops a script after 45 s. The first draft waited 8 s on the empty week as well and hung once (01/10); keep the waits short.
+- The browser tool stops a script after 45 s (its error: "timed out after 45000ms", 01/10). The first draft waited 8 s on the empty week as well and hung once (01/10); keep the waits short.
 - Clicking the current week again does nothing (the page ignores it), so `other` is never the current week.
 - `no_forbidden_words` can fail inside verbatim row text (the runbook keeps rows as written). Do not edit the row. Report it to Ty: the source itself names the other entity, which may mean the wrong tree was read.
 - Weekly-run commit titles vary, and the heartbeat is committed before the data, so step 4 takes the last `index.json` commit that is not a `(#N)` PR merge.
