@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-30T08:44:38Z",
+ "generated": "2026-10-05T15:48:00Z",
  "currentWeek": "Sep W4 ’26",
  "detail": {
   "Nov W4 ’25": "2025-11-W4",
@@ -424,6 +424,16 @@
    "vnO": 1,
    "verified": true,
    "note": "TH 28/09: LA nêu 44 / tồn 27, Vinh nêu 32 / tồn 1, tổng 76 / tồn 28 (✓ĐC khớp SUM). ✓ĐC lần đầu sau 3 tuần chi tiết khớp TH tuyệt đối: Long An 44 dòng = 44 TH, trong đó đúng 27 dòng “Đang xử lý” = 27 tồn; Vinh 32 dòng = 32 TH. ⚠ Vinh: TH ghi 1 tồn nhưng cả 32 dòng chi tiết đều “Hoàn thành”. Dấu vết duy nhất là dòng 7 (The Garden – “Xe Cư Dân Đậu Sai Quy Định”, BP An ninh) có ô Phương án ghi “Chưa Hoàn Thành” trong khi ô Tình trạng ghi “Hoàn thành” — cần người phụ trách file xác nhận đây có đúng là 1 tồn đó không. ⚠ Long An: 5 dòng đầu (BP AN) bị đảo cột Phương án ↔ Tình trạng trong file nguồn; đã gán về đúng trường, giữ nguyên chữ, không sửa nội dung. 27 tồn dồn vào 2 bộ phận: KT 12 dòng dùng chung một lý do “Trời mưa liên tục nên BP chưa xử lý được, hạn đầu tuần sau xử lý”; CSCD-TI 15 dòng, trong đó 10 dòng nấm mốc ghế/chân KVC lặp gần như y hệt."
+  },
+  {
+   "week": "Oct W1 ’26",
+   "src": "2026-10-W01_Sitecheck.xlsx",
+   "laR": 48,
+   "vnR": 60,
+   "laO": 27,
+   "vnO": 4,
+   "verified": false,
+   "note": "TH 05/10: LA nêu 48 / tồn 27, Vinh nêu 60 / tồn 4, tổng 108 / tồn 31 (✓ĐC khớp SUM trong file). ⚠ TUẦN NÀY CHƯA CÓ DỮ LIỆU CHI TIẾT: read_resource chỉ trả về sheet TH rồi dừng ở \"read budget exhausted\"; sheet ECO CENTRAL PARK (61 dòng) không trả về dòng nào qua 4 lần đọc, nên sheet Long An nằm sau đó cũng không đọc được. Không suy diễn, không bịa dòng nào — tuần này chỉ có số tổng, chi tiết chưa đối chiếu, nên verified=false. ✓ĐC cột \"tuần 04 tháng 09\" trong chính file này đọc đúng 44/32, khớp số đã publish của Sep W4, nên cột tổng là đáng tin. Vinh nêu 60 so với 32 tuần trước (+87,5%) — mức cao nhất của Vinh trong chuỗi, cần xác nhận là đầu việc thật chứ không phải gộp/lặp dòng. Nghi ảnh nhúng trong sheet Vinh làm vỡ giới hạn đọc; cần đọc lại chi tiết khi nguồn đọc được."
   }
  ]
 }
