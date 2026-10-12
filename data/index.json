@@ -1,6 +1,6 @@
 {
- "generated": "2026-10-05T15:48:00Z",
- "currentWeek": "Sep W4 ’26",
+ "generated": "2026-10-12T15:46:51Z",
+ "currentWeek": "Oct W2 ’26",
  "detail": {
   "Nov W4 ’25": "2025-11-W4",
   "Dec W1 ’25": "2025-12-W1",
@@ -41,7 +41,8 @@
   "Sep W1 ’26": "2026-09-W1",
   "Sep W2 ’26": "2026-09-W2",
   "Sep W3 ’26": "2026-09-W3",
-  "Sep W4 ’26": "2026-09-W4"
+  "Sep W4 ’26": "2026-09-W4",
+  "Oct W2 ’26": "2026-10-W2"
  },
  "history": [
   {
@@ -434,6 +435,16 @@
    "vnO": 4,
    "verified": false,
    "note": "TH 05/10: LA nêu 48 / tồn 27, Vinh nêu 60 / tồn 4, tổng 108 / tồn 31 (✓ĐC khớp SUM trong file). ⚠ TUẦN NÀY CHƯA CÓ DỮ LIỆU CHI TIẾT: read_resource chỉ trả về sheet TH rồi dừng ở \"read budget exhausted\"; sheet ECO CENTRAL PARK (61 dòng) không trả về dòng nào qua 4 lần đọc, nên sheet Long An nằm sau đó cũng không đọc được. Không suy diễn, không bịa dòng nào — tuần này chỉ có số tổng, chi tiết chưa đối chiếu, nên verified=false. ✓ĐC cột \"tuần 04 tháng 09\" trong chính file này đọc đúng 44/32, khớp số đã publish của Sep W4, nên cột tổng là đáng tin. Vinh nêu 60 so với 32 tuần trước (+87,5%) — mức cao nhất của Vinh trong chuỗi, cần xác nhận là đầu việc thật chứ không phải gộp/lặp dòng. Nghi ảnh nhúng trong sheet Vinh làm vỡ giới hạn đọc; cần đọc lại chi tiết khi nguồn đọc được."
+  },
+  {
+   "week": "Oct W2 ’26",
+   "src": "2026-10-W02_Sitecheck.xlsx",
+   "laR": 40,
+   "vnR": 47,
+   "laO": 7,
+   "vnO": 5,
+   "verified": false,
+   "note": "TH 12/10: LA nêu 40 / tồn 7, Vinh nêu 47 / tồn 5, tổng 87 / tồn 12 (✓ĐC khớp SUM trong file). ✓ĐC Vinh: đọc đủ 47 dòng chi tiết = 47 TH, đọc lại 3 lần ra kết quả y hệt. ⚠ Nhưng chi tiết Vinh chỉ có 1 dòng “Đang xử lý” (AC-37) trong khi TH ghi 5 chưa hoàn thành — 4 tồn còn lại không truy được về dòng nào, cần người phụ trách file chỉ rõ. ⚠ CHI TIẾT LONG AN TUẦN NÀY CHƯA ĐỌC ĐƯỢC (tuần thứ 2 liên tiếp): read_resource hết “read budget” ngay sau sheet Vinh, sheet BQLVH ECO RETREAT nằm cuối nên không trả về dòng nào qua 3 lần đọc. Không bịa dòng nào — Long An tuần này chỉ có số tổng, nên verified=false và bảng chi tiết trên trang chỉ hiển thị 47 dòng Vinh. Sheet Long An khai báo vùng A1:I41, tức khoảng 39 dòng chi tiết nếu cùng kiểu 2 dòng tiêu đề như sheet Vinh, so với 40 ở TH — chưa đọc được nên chưa đối chiếu được. ⚠ Sheet Vinh nay gộp 2 khối báo cáo: dòng 1–31 (CSCD/BQL toà) và dòng 32–47 (tuần tra an ninh). 3 mã căn xuất hiện ở cả hai khối (CA3-28 dòng 5 và 32, HV-179A dòng 8 và 40, IL1-37 dòng 22 và 42) → nghi đếm trùng 1 sự việc 2 lần, cần xác nhận trước khi coi 47 là đầu việc thật; 4 dòng 34–37 “Xe cư dân đậu sai quy định” cũng gần như y hệt. ✓ĐC cột “tuần 01 tháng 10” trong chính file này đọc đúng 48/60, khớp số đã publish của Oct W1. Cột “Bộ phận xử lý” của sheet Vinh có 14 ô ghi kèm tên nhân sự; repo này công khai nên chỉ lưu mã bộ phận, bỏ phần tên người, các trường khác giữ nguyên văn."
   }
  ]
 }
