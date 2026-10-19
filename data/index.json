@@ -1,6 +1,6 @@
 {
- "generated": "2026-10-12T15:46:51Z",
- "currentWeek": "Oct W2 ’26",
+ "generated": "2026-10-19T15:47:20Z",
+ "currentWeek": "Oct W3 ’26",
  "detail": {
   "Nov W4 ’25": "2025-11-W4",
   "Dec W1 ’25": "2025-12-W1",
@@ -42,7 +42,8 @@
   "Sep W2 ’26": "2026-09-W2",
   "Sep W3 ’26": "2026-09-W3",
   "Sep W4 ’26": "2026-09-W4",
-  "Oct W2 ’26": "2026-10-W2"
+  "Oct W2 ’26": "2026-10-W2",
+  "Oct W3 ’26": "2026-10-W3"
  },
  "history": [
   {
@@ -445,6 +446,16 @@
    "vnO": 5,
    "verified": false,
    "note": "TH 12/10: LA nêu 40 / tồn 7, Vinh nêu 47 / tồn 5, tổng 87 / tồn 12 (✓ĐC khớp SUM trong file). ✓ĐC Vinh: đọc đủ 47 dòng chi tiết = 47 TH, đọc lại 3 lần ra kết quả y hệt. ⚠ Nhưng chi tiết Vinh chỉ có 1 dòng “Đang xử lý” (AC-37) trong khi TH ghi 5 chưa hoàn thành — 4 tồn còn lại không truy được về dòng nào, cần người phụ trách file chỉ rõ. ⚠ CHI TIẾT LONG AN TUẦN NÀY CHƯA ĐỌC ĐƯỢC (tuần thứ 2 liên tiếp): read_resource hết “read budget” ngay sau sheet Vinh, sheet BQLVH ECO RETREAT nằm cuối nên không trả về dòng nào qua 3 lần đọc. Không bịa dòng nào — Long An tuần này chỉ có số tổng, nên verified=false và bảng chi tiết trên trang chỉ hiển thị 47 dòng Vinh. Sheet Long An khai báo vùng A1:I41, tức khoảng 39 dòng chi tiết nếu cùng kiểu 2 dòng tiêu đề như sheet Vinh, so với 40 ở TH — chưa đọc được nên chưa đối chiếu được. ⚠ Sheet Vinh nay gộp 2 khối báo cáo: dòng 1–31 (CSCD/BQL toà) và dòng 32–47 (tuần tra an ninh). 3 mã căn xuất hiện ở cả hai khối (CA3-28 dòng 5 và 32, HV-179A dòng 8 và 40, IL1-37 dòng 22 và 42) → nghi đếm trùng 1 sự việc 2 lần, cần xác nhận trước khi coi 47 là đầu việc thật; 4 dòng 34–37 “Xe cư dân đậu sai quy định” cũng gần như y hệt. ✓ĐC cột “tuần 01 tháng 10” trong chính file này đọc đúng 48/60, khớp số đã publish của Oct W1. Cột “Bộ phận xử lý” của sheet Vinh có 14 ô ghi kèm tên nhân sự; repo này công khai nên chỉ lưu mã bộ phận, bỏ phần tên người, các trường khác giữ nguyên văn."
+  },
+  {
+   "week": "Oct W3 ’26",
+   "src": "2026-10-W03_Sitecheck.xlsx",
+   "laR": 29,
+   "vnR": 50,
+   "laO": 12,
+   "vnO": 0,
+   "verified": true,
+   "note": "TH 19/10: LA nêu 29 / tồn 12, Vinh nêu 50 / tồn 0, tổng 79 / tồn 12 (✓ĐC khớp SUM trong file). ✓ĐC lần đầu sau 2 tuần đọc được CẢ HAI sheet chi tiết — dùng startPage=2 để vượt “read budget” đã chặn sheet Long An ở Oct W1 và Oct W2; Long An 29 dòng = 29 TH, Vinh 50 dòng = 50 TH, tổng 79 dòng = 79 TH, khớp tuyệt đối. ✓ĐC Vinh: cả 50 dòng đều “Hoàn thành” → đúng 0 tồn như TH. Đây là tuần sạch nhất của Vinh trong chuỗi. ⚠ Long An: chỉ 10 dòng ghi rõ “Đang xử lý” nhưng TH ghi 12 tồn. 3 dòng còn lại có ô Tình trạng không chuẩn nên không xếp được: 1 dòng ghi hạn thay vì tình trạng (bãi giữ xe trước sảnh bàn giao — “thay tấm chắn mới thời hạn trong vòng 30 ngày”), 1 dòng chờ cư dân nhận hàng về thay (K7 — chân dù hỏng, có rủi ro an toàn khi mưa giông), 1 dòng bỏ trống ô Tình trạng (nhà Đa Năng — tấm lót, ô Phương án ghi “Tài sản của ban kinh doanh”). Vậy số chưa hoàn thành thật nằm giữa 10 và 13; TH chốt 12 nhưng không truy được về dòng cụ thể — cần người phụ trách file chỉ rõ 12 dòng nào. ⚠ Long An: 5 dòng Kỹ Thuật đầu sheet bỏ trống ô Vị trí/khu vực, và 6 dòng cuối (khối CSCD) không đánh STT — giữ nguyên văn, không tự điền. ⚠ Trùng dòng: Long An 2 cặp trùng khít (“Đèn bị ngã về sau…” ×2; K30 “Sàn cư dân kinh doanh rất dơ…” ×2); Vinh 4 nhóm trùng (QT-70 “để đồ” ×2, CT1 “Đổ vật liệu sai quy định” ×2, The Garden “Xe nhà thầu… làm bẩn đường” ×2, Hầm B1 CT01 “Lỗi đèn báo lốt ô tô” ×3). Giữ nguyên, không gộp — trùng trong nguồn là một phát hiện. ⚠ Sheet Vinh: 15 ô “Bộ phận xử lý” (khối tuần tra cuối sheet) chỉ ghi TÊN NHÂN SỰ, không còn mã bộ phận như tuần trước; repo này công khai nên các ô đó lưu là “(ẩn tên nhân sự)”, các trường khác giữ nguyên văn. ✓ĐC hai cột tuần cũ trong chính file này đọc đúng 48/60 (tuần 01/10) và 40/47 (tuần 02/10), khớp số đã publish, nên cột tổng là đáng tin. Điểm cần chú ý: Long An nêu 29 so với 40 tuần trước (−27,5%) nhưng tồn tăng 7 → 12 (+71,4%); khối lượng nêu giảm mà tồn tăng."
   }
  ]
 }
