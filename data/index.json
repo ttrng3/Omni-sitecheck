@@ -1,6 +1,6 @@
 {
- "generated": "2026-10-26T15:47:04Z",
- "currentWeek": "Oct W4 ’26",
+ "generated": "2026-11-02T15:50:38Z",
+ "currentWeek": "Oct W5 ’26",
  "detail": {
   "Nov W4 ’25": "2025-11-W4",
   "Dec W1 ’25": "2025-12-W1",
@@ -44,7 +44,8 @@
   "Sep W4 ’26": "2026-09-W4",
   "Oct W2 ’26": "2026-10-W2",
   "Oct W3 ’26": "2026-10-W3",
-  "Oct W4 ’26": "2026-10-W4"
+  "Oct W4 ’26": "2026-10-W4",
+  "Oct W5 ’26": "2026-10-W5"
  },
  "history": [
   {
@@ -467,6 +468,16 @@
    "vnO": 0,
    "verified": true,
    "note": "TH 26/10: LA nêu 37 / tồn 5, Vinh nêu 43 / tồn 0, tổng 80 / tồn 5 (✓ĐC khớp SUM trong file). ✓ĐC tuần thứ 2 liên tiếp đọc được CẢ HAI sheet chi tiết, tuần này ngay lần đọc đầu không cần vượt read budget: Long An 37 dòng = 37 TH, Vinh 43 dòng = 43 TH, tổng 80 dòng = 80 TH, khớp tuyệt đối. ✓ĐC Vinh: cả 43 dòng đều ghi “Hoàn thành” → đúng 0 tồn như TH, tuần sạch thứ 2 liên tiếp. ⚠ NHƯNG số 0 của Vinh có vết: dòng 16 (The Garden — “Căn Hộ HV-179A tự ý bao che ngoài ban công tầng 2”) có ô Phương án ghi “Chưa Hoàn Thành” trong khi ô Tình trạng ghi “Hoàn thành” — cùng kiểu lỗi đã gặp ở Sep W4; và dòng 16 trùng khít nội dung với dòng 17 (cùng căn, cùng vấn đề, chỉ khác ô Phương án), tức 1 sự việc nhập 2 lần, 1 bản bị đánh dấu chưa xong ở sai cột. Nếu dòng đó thật sự chưa xong thì tồn Vinh không phải 0 — cần người phụ trách file xác nhận. ⚠ Vinh dòng 18: ô Mô tả vấn đề chỉ ghi TÊN NHÂN SỰ, không có nội dung vấn đề nào — một đầu việc được đếm nhưng không ghi lại lỗi gì. ⚠ Long An: chỉ 2 dòng ghi rõ “Đang xử lý” (K21 trần bị thấm; ghế ngồi KVC bị bung) nhưng TH ghi 5 tồn. 3 dòng còn lại có ô Tình trạng viết thành câu kết quả nên không xếp được: K25 “Cư dân đã để xe bên ngoài”, K46 “Cư dân đã tiến hành thu dọn rác.”, K49 “Đã nhờ KT tiến hành tháo biển xuống.”. 2 + 3 = đúng 5 nên rất có thể TH đếm 3 dòng này là tồn, nhưng 2 trong 3 đọc như đã xong — vậy số chưa hoàn thành thật nằm giữa 2 và 5; TH chốt 5 và không truy được về dòng cụ thể. ⚠ An toàn: K49 “Bảng hiệu sắp rớt” mới chỉ “nhờ KT tháo biển xuống”, chưa có xác nhận đã tháo. ⚠ Trùng dòng: Long An 1 nhóm trùng khít ×3 (“Khu vui chơi CVTT — Nấm móc bám nhiều”, cùng bộ phận và cùng phương án định kì ngày 15) và 1 cặp gần khít (CVTT — “Nhiều lá cây”, chỉ khác Quét dọn/Dọn dẹp); Vinh 2 cặp trùng khít (“The Garden — Xe Cư Dân Đậu Sai Quy Định” ×2, “P1 — Trong quá trình thi công gây bẩn hành lang” ×2). Tổng 4 dòng dư do trùng khít trên 80 dòng (5%). Giữ nguyên, không gộp — trùng trong nguồn là một phát hiện. ⚠ Sheet Vinh: 6 ô “Bộ phận xử lý” ghi kèm tên nhân sự; repo này công khai nên chỉ lưu mã bộ phận, phần tên lưu là “(ẩn tên nhân sự)”, các trường khác giữ nguyên văn. ✓ĐC 3 cột tuần cũ trong chính file này đọc đúng 48/60 (tuần 01/10), 40/47 (tuần 02/10), 29/50 (tuần 03/10), khớp số đã publish, nên cột tổng là đáng tin. ✓ĐC tiêu đề sheet Vinh ghi “TUẦN 43 NĂM 2026” = 19–25/10, đúng kỳ báo cáo của file nộp 26/10. Điểm cần chú ý: Long An nêu 37 so với 29 tuần trước (+27,6%) nhưng tồn giảm 12 → 5 (−58,3%); tỷ lệ hoàn thành toàn khối 93,8% (75/80) so với 84,8% tuần trước."
+  },
+  {
+   "week": "Oct W5 ’26",
+   "src": "2026-10-W05_Sitecheck.xlsx",
+   "laR": 34,
+   "vnR": 38,
+   "laO": 7,
+   "vnO": 1,
+   "verified": true,
+   "note": "TH 02/11: LA nêu 34 / tồn 7, Vinh nêu 38 / tồn 1, tổng 72 / tồn 8 (✓ĐC khớp SUM trong file). ✓ĐC TUẦN ĐỐI CHIẾU SẠCH NHẤT CỦA CHUỖI: lần đầu cả hai sheet chi tiết đọc được ngay lần đọc đầu VÀ cả bốn con số đều truy được về dòng cụ thể — Long An 34 dòng = 34 TH, Vinh 38 dòng = 38 TH, tổng 72 dòng = 72 TH; 7 dòng Long An ghi rõ “Đang xử lý” = đúng 7 tồn TH; 1 dòng Vinh ghi “Chưa hoàn thành (Chờ trời tạnh mưa)” (QT1-27 — dây điện mắc qua nhà) = đúng 1 tồn TH. Không còn khoảng “tồn thật nằm giữa X và Y” như 4 tuần trước. ⚠ AN TOÀN — 2 việc chưa xong đáng theo: (1) Bãi đổ xe Eco Barzaar “Vật dụng xây dựng để trên mái bãi đổ xe gây nguy hiểm”, phương án mới chỉ “Đã liên hệ nhà thầu”, chưa có xác nhận đã hạ xuống; (2) 4 camera hỏng ở 4 vị trí (GDN-C10-Ngoài 01; G01-C17-Sảnh 08 và K27.1-HL-T1; K31-HL-T1) — 2 dòng, mỗi dòng “2 Cam bị hư”, đã báo Kỹ Thuật nhưng vẫn Đang xử lý, tức mất giám sát hình ảnh ở 4 điểm. ⚠ Long An: 27/34 dòng (toàn bộ khối KT, CSCD, MTĐT) KHÔNG đánh STT, chỉ 7 dòng AN có số; 1 dòng bỏ trống ô Vị trí/khu vực (“Chuông gió bông tróc sơn”). Giữ nguyên văn, không tự điền. ⚠ Cột “Ghi chú” của sheet Long An chỉ có 1 ô có nội dung — dòng “Cv đảo dừa — Bảng giới thiệu loại cây bị bung tróc” ghi “Chưa nhận bàn giao từ BP KT và BXD”; schema tuần không có trường ghi chú nên nội dung đó lưu ở note này chứ không bỏ. ⚠ Trùng dòng: 4 dòng dư do trùng khít trên 72 dòng (5,6%) — Long An “Kho căn thô — CCDC chưa gọn gàng” ×2; Vinh “Tầng 18, Toà P1 — Cư dân để dép ngoài hành lang chung” ×2 và “CT1 — Trong quá trình thi công gây mất vệ sinh khu vực hành lang chung” ×3. Thêm 1 cặp Vinh “The Garden — Xe cư dân đậu sai quy định” ×2 trùng mọi trường, chỉ khác tên nhân sự tuần tra trong nguồn, nên có thể là 2 lần ghi nhận thật. Giữ nguyên, không gộp — trùng trong nguồn là một phát hiện. ⚠ Vinh dòng 16: “Căn hộ AC-20 phơi quần áo sai quy định” nhưng ô Phương án ghi “Nhắc nhở nhà thầu xử lý” — lỗi cư dân mà phương án ghi nhà thầu, nghi copy từ dòng trên. ⚠ Vinh: 12 ô “Bộ phận xử lý” (dòng 13–24) ghi kèm tên nhân sự; repo này công khai nên chỉ lưu mã bộ phận, phần tên lưu là “(ẩn tên nhân sự)”, các trường khác giữ nguyên văn. ⚠ Hai sheet dùng từ khác nhau cho cùng một trạng thái: Long An “Đã hoàn thành”, Vinh “Hoàn thành” — giữ nguyên văn. Riêng “Chưa hoàn thành (Chờ trời tạnh mưa)” không nằm trong bộ lọc trạng thái của trang nên hiện thành pill riêng; nó KHÔNG bị đếm sai thành hoàn thành, nhưng không chọn được bằng bộ lọc. ✓ĐC 4 cột tuần cũ trong chính file này đọc đúng 48/60 (tuần 01/10), 40/47 (02/10), 29/50 (03/10), 37/43 (04/10), khớp số đã publish, nên cột tổng là đáng tin. ✓ĐC tiêu đề sheet Vinh ghi “TUẦN 44 NĂM 2026” = 26/10–01/11, đúng kỳ báo cáo của file nộp 02/11. Điểm cần chú ý: khối lượng nêu giảm ở cả hai site (LA 37→34 −8,1%; Vinh 43→38 −11,6%; tổng 80→72 −10,0%) nhưng tồn tăng 5→8 (+60,0%); tỷ lệ hoàn thành toàn khối 88,9% (64/72) so với 93,8% tuần trước, và tồn dồn vào Long An 7/8 — trong đó 4 dòng thuộc BP An ninh."
   }
  ]
 }
