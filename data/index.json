@@ -1,6 +1,6 @@
 {
- "generated": "2026-11-02T15:50:38Z",
- "currentWeek": "Oct W5 ’26",
+ "generated": "2026-11-23T15:56:56Z",
+ "currentWeek": "Nov W3 ’26",
  "detail": {
   "Nov W4 ’25": "2025-11-W4",
   "Dec W1 ’25": "2025-12-W1",
@@ -45,7 +45,10 @@
   "Oct W2 ’26": "2026-10-W2",
   "Oct W3 ’26": "2026-10-W3",
   "Oct W4 ’26": "2026-10-W4",
-  "Oct W5 ’26": "2026-10-W5"
+  "Oct W5 ’26": "2026-10-W5",
+  "Nov W1 ’26": "2026-11-W1",
+  "Nov W2 ’26": "2026-11-W2",
+  "Nov W3 ’26": "2026-11-W3"
  },
  "history": [
   {
@@ -478,6 +481,36 @@
    "vnO": 1,
    "verified": true,
    "note": "TH 02/11: LA nêu 34 / tồn 7, Vinh nêu 38 / tồn 1, tổng 72 / tồn 8 (✓ĐC khớp SUM trong file). ✓ĐC TUẦN ĐỐI CHIẾU SẠCH NHẤT CỦA CHUỖI: lần đầu cả hai sheet chi tiết đọc được ngay lần đọc đầu VÀ cả bốn con số đều truy được về dòng cụ thể — Long An 34 dòng = 34 TH, Vinh 38 dòng = 38 TH, tổng 72 dòng = 72 TH; 7 dòng Long An ghi rõ “Đang xử lý” = đúng 7 tồn TH; 1 dòng Vinh ghi “Chưa hoàn thành (Chờ trời tạnh mưa)” (QT1-27 — dây điện mắc qua nhà) = đúng 1 tồn TH. Không còn khoảng “tồn thật nằm giữa X và Y” như 4 tuần trước. ⚠ AN TOÀN — 2 việc chưa xong đáng theo: (1) Bãi đổ xe Eco Barzaar “Vật dụng xây dựng để trên mái bãi đổ xe gây nguy hiểm”, phương án mới chỉ “Đã liên hệ nhà thầu”, chưa có xác nhận đã hạ xuống; (2) 4 camera hỏng ở 4 vị trí (GDN-C10-Ngoài 01; G01-C17-Sảnh 08 và K27.1-HL-T1; K31-HL-T1) — 2 dòng, mỗi dòng “2 Cam bị hư”, đã báo Kỹ Thuật nhưng vẫn Đang xử lý, tức mất giám sát hình ảnh ở 4 điểm. ⚠ Long An: 27/34 dòng (toàn bộ khối KT, CSCD, MTĐT) KHÔNG đánh STT, chỉ 7 dòng AN có số; 1 dòng bỏ trống ô Vị trí/khu vực (“Chuông gió bông tróc sơn”). Giữ nguyên văn, không tự điền. ⚠ Cột “Ghi chú” của sheet Long An chỉ có 1 ô có nội dung — dòng “Cv đảo dừa — Bảng giới thiệu loại cây bị bung tróc” ghi “Chưa nhận bàn giao từ BP KT và BXD”; schema tuần không có trường ghi chú nên nội dung đó lưu ở note này chứ không bỏ. ⚠ Trùng dòng: 4 dòng dư do trùng khít trên 72 dòng (5,6%) — Long An “Kho căn thô — CCDC chưa gọn gàng” ×2; Vinh “Tầng 18, Toà P1 — Cư dân để dép ngoài hành lang chung” ×2 và “CT1 — Trong quá trình thi công gây mất vệ sinh khu vực hành lang chung” ×3. Thêm 1 cặp Vinh “The Garden — Xe cư dân đậu sai quy định” ×2 trùng mọi trường, chỉ khác tên nhân sự tuần tra trong nguồn, nên có thể là 2 lần ghi nhận thật. Giữ nguyên, không gộp — trùng trong nguồn là một phát hiện. ⚠ Vinh dòng 16: “Căn hộ AC-20 phơi quần áo sai quy định” nhưng ô Phương án ghi “Nhắc nhở nhà thầu xử lý” — lỗi cư dân mà phương án ghi nhà thầu, nghi copy từ dòng trên. ⚠ Vinh: 12 ô “Bộ phận xử lý” (dòng 13–24) ghi kèm tên nhân sự; repo này công khai nên chỉ lưu mã bộ phận, phần tên lưu là “(ẩn tên nhân sự)”, các trường khác giữ nguyên văn. ⚠ Hai sheet dùng từ khác nhau cho cùng một trạng thái: Long An “Đã hoàn thành”, Vinh “Hoàn thành” — giữ nguyên văn. Riêng “Chưa hoàn thành (Chờ trời tạnh mưa)” không nằm trong bộ lọc trạng thái của trang nên hiện thành pill riêng; nó KHÔNG bị đếm sai thành hoàn thành, nhưng không chọn được bằng bộ lọc. ✓ĐC 4 cột tuần cũ trong chính file này đọc đúng 48/60 (tuần 01/10), 40/47 (02/10), 29/50 (03/10), 37/43 (04/10), khớp số đã publish, nên cột tổng là đáng tin. ✓ĐC tiêu đề sheet Vinh ghi “TUẦN 44 NĂM 2026” = 26/10–01/11, đúng kỳ báo cáo của file nộp 02/11. Điểm cần chú ý: khối lượng nêu giảm ở cả hai site (LA 37→34 −8,1%; Vinh 43→38 −11,6%; tổng 80→72 −10,0%) nhưng tồn tăng 5→8 (+60,0%); tỷ lệ hoàn thành toàn khối 88,9% (64/72) so với 93,8% tuần trước, và tồn dồn vào Long An 7/8 — trong đó 4 dòng thuộc BP An ninh."
+  },
+  {
+   "week": "Nov W1 ’26",
+   "src": "2026-11-W01-02_Sitecheck.xlsx",
+   "laR": 47,
+   "vnR": 39,
+   "laO": 17,
+   "vnO": 0,
+   "verified": false,
+   "note": "TH 17/11 (file gộp 2 tuần W01-02): LA nêu 47 / Vinh nêu 39, tổng 86. Cột tồn của file là MỘT số cho cả hai tuần: LA 35 — ô F3 là công thức tay =17+18 — và Vinh 0. ✓ĐC Long An 47 dòng chi tiết = 47 TH, khớp tuyệt đối. ⚠ TỒN 17 LÀ SỐ SUY RA (GĐ), không phải số đọc riêng cho tuần này: 17 được gán cho tuần 1 và 18 cho tuần 2 theo đúng công thức =17+18, không có chỗ nào trong file nói rõ cách tách. ⚠ VÀ KHÔNG TRUY ĐƯỢC VỀ DÒNG: trong 47 dòng Long An KHÔNG CÓ DÒNG NÀO ghi “Đang xử lý”. Nhiều nhất 7 dòng đọc ra là chưa xong — 4 dòng ghi lý do hoãn ngay trong ô Tình trạng (K52 “Căn đóng cửa nên sẽ liên hệ nhắc nhở”, K30 “Cư dân đóng cửa nên sẽ nhắc nhở sau, nhắc cùng căn K62”, K12 “Cư dân đi vắng nên nhắc nhở sau”, K50 “Liên hệ nhắc nhở cư dân”) và 3 dòng MTĐT bỏ trống ô Phương án, ô Tình trạng lại ghi phương án (vila3 và Vila1 — lưới ngăn rắn / bẫy rắn bị bung, “liên hệ với CTY côn trùng gia cố lại”; khu phòng họp — kính dính keo, “Nhờ BP KT xử lí giúp”). Vậy số tồn thật của Long An tuần này nằm giữa 0 và 7, còn TH chốt 17 — cần người phụ trách file chỉ rõ 17 dòng nào. ⚠ CHI TIẾT VINH TUẦN NÀY KHÔNG CÓ: sheet “Tuần 1 tháng 11 -VINH” TRÙNG KHÍT TỪNG Ô với sheet “Tuần 2 tháng 11-VINH” — cùng 48 dòng, cùng tiêu đề “TUẦN 46 NĂM 2026”, mà tuần 46 là 09–15/11, tức kỳ của tuần 2. Đây là lỗi copy tab, cùng kiểu đã gặp ở Aug W3 Vinh. Không bịa dòng nào: tuần này chỉ lưu 47 dòng Long An; 39 dòng Vinh theo TH coi như chưa có chi tiết. ✓ĐC cột “tuần 05 tháng 10” trong chính file này đọc đúng 34/38, khớp số đã publish của Oct W5, nên cột tổng là đáng tin. ⚠ Long An: STT nhảy từ 30 sang 32 (thiếu 31) và 14 dòng cuối (AN, MTĐT) không đánh STT — giữ nguyên, không tự điền."
+  },
+  {
+   "week": "Nov W2 ’26",
+   "src": "2026-11-W01-02_Sitecheck.xlsx",
+   "laR": 42,
+   "vnR": 48,
+   "laO": 18,
+   "vnO": 0,
+   "verified": false,
+   "note": "TH 17/11 (cùng file gộp W01-02): LA nêu 42 / Vinh nêu 48, tổng 90; tồn LA 18 (GĐ — nửa sau của công thức =17+18), Vinh 0. ✓ĐC VINH SẠCH: 48 dòng chi tiết = 48 TH, cả 48 dòng ghi “Hoàn thành” → đúng 0 tồn như TH. Đây cũng là tuần dữ liệu Vinh thật gần nhất của chuỗi (tuần 46 = 09–15/11). ⚠ LONG AN LỆCH SỐ: đọc được 46 dòng chi tiết nhưng TH ghi 42 — dư 4 dòng. Không chọn bên nào: giữ nguyên 46 dòng đọc được và ghi lệch ở đây. STT của sheet nhảy 23→28 rồi 30→32, và 17 dòng cuối (CSCD & TICC) không đánh STT, nên không dùng STT để đối chiếu được. ⚠ Tồn: chỉ 10 dòng Long An ghi “Đang xử lý” so với 18 suy từ TH — 8 tồn không truy được về dòng nào. 10 dòng đó: 2 dòng MTĐT (bao gom và túi ni lông của BCX chưa dọn ở đường dạo CV mới), K26 chậu cây, K47 đồ đạc để sai quy định, CVTT sơ đồ thực vật bong tróc, và 5 dòng nấm mốc ở CVTT. ⚠ 5 dòng nấm mốc đó (Ghế kv CVTT ×3, Nóc kv CVTT, cổng cầu baobap) gần như y hệt nhau, cùng một phương án “Phối hợp BP MTDT xử lý định kì”, và chính ô Mô tả ghi “rất lâu chưa thấy xử lí” — cùng kiểu dồn dòng đã ghi ở Sep W4 và Oct W4. ⚠ Cột Ghi chú của sheet Long An có 5 ô có nội dung; schema tuần không có trường ghi chú nên lưu ở đây: K60 “căn này rất lâu chưa thấy xử lí dứt điểm”; CVTT “các bảng hướng dẫn rất lâu chưa thấy phương pháp giải quyết.”; K47 “Văn phòng MTDT”; đường dạo CV mới “BCX đang trong quá trình trồng thêm cây”; trụ sóng đường dạo CV mới “Của BCX để lại, liên hệ với BCX nhắc nhở nhân viên giải quyết triệt để vấn đề này”. ⚠ Trùng dòng ở Vinh: “Hầm B1 CT01 — Lỗi đèn báo lốt ô tô” ×4, “Gió To Làm Rách Bao Che Căn Hộ” ×4 (The Garden ×3 + Central Plaza ×1), “CT1 — Trong quá trình thi công không đảm bảo vệ sinh” ×2. Giữ nguyên, không gộp — trùng trong nguồn là một phát hiện. ✓ĐC Vinh tuần này KHÔNG còn ô “Bộ phận xử lý” nào ghi tên nhân sự, khác 3 tuần trước, nên không phải ẩn tên ô nào. verified=false vì Long An lệch 46 dòng / 42 TH và 8 tồn không truy được."
+  },
+  {
+   "week": "Nov W3 ’26",
+   "src": "2026-11-W03_Sitecheck.xlsx",
+   "laR": 38,
+   "vnR": 0,
+   "laO": 14,
+   "vnO": 0,
+   "verified": false,
+   "note": "TH 23/11: LA nêu 38 / tồn 14. VINH BỎ TRỐNG: ô số nêu của Vinh trong TH để trống và file chỉ có 2 sheet (TH, “Eco LA”) — không có sheet Vinh nào. ⚠ vnR=0 và vnO=0 ở tuần này nghĩa là “KHÔNG CÓ BÁO CÁO”, KHÔNG phải “Vinh nêu 0 đầu việc” — đừng đọc cột Vinh tuần này như một tuần sạch. Tuần dữ liệu Vinh thật gần nhất là tuần 46 (09–15/11) = Nov W2; tới 23/11 Vinh đã 1 tuần không nộp. ✓ĐC Long An 38 dòng chi tiết = 38 TH, khớp tuyệt đối, đọc được ngay lần đọc đầu. ⚠ TỒN 14 KHÔNG TRUY ĐƯỢC: chỉ 5 dòng ghi “Đang xử lý” (K60, K62 trước căn dơ; K32 standee bị nhào nát; đường A3 đường dơ; đường vào SBH chưa có giấy kiểm nghiệm) cộng 1 dòng bỏ trống ô Tình trạng (NVS trong SBH thiếu đèn — “dây chờ đèn, thuộc của nhà thầu thi công”) = nhiều nhất 6, so với 14 ở TH. Ba tuần liền số tồn TH của Long An không truy được về dòng: W1 0–7 so với 17, W2 10 so với 18, W3 5–6 so với 14. ⚠ 10 dòng KT cuối sheet (dòng 29–38) bị ĐẢO CỘT Phương án ↔ Tình trạng trong file nguồn: ô Phương án ghi “Đã hoàn thành”, ô Tình trạng ghi việc đã làm (“Chỉnh lại đèn ngã”). Đã gán về đúng trường, giữ nguyên chữ, không sửa nội dung — cùng lỗi đã gặp ở Sep W4. ⚠ Dòng 22 (Đường A3) bỏ trống ô Phương án, nội dung phương án nằm lệch sang cột “Hình ảnh hoàn thành”: “quét dọn cát hằng ngày và nhờ BCX xịt rửa đường hỗ trợ”; schema tuần không có trường đó nên lưu ở note này. ⚠ Dòng 30 bỏ trống ô Vị trí/khu vực và trùng nội dung với dòng 29 (“Đèn bị ngã”, cùng BP KT, cùng phương án) — giữ nguyên, không tự điền. ⚠ AN TOÀN: hai việc chưa xong đều ở khu sảnh bán hàng đang đón khách — “Đường vào SBH — Chưa có giấy kiểm nghiệm” vẫn Đang xử lý (đang chờ nhận giấy kiểm định), và “NVS trong sbh — thiếu đèn” không có tình trạng, lý do ghi là dây chờ đèn thuộc nhà thầu thi công. verified=false vì Vinh không có báo cáo và 8 tồn của Long An không truy được."
   }
  ]
 }
